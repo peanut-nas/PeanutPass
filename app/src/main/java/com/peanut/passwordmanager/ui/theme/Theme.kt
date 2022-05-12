@@ -19,7 +19,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 fun PasswordManagerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val context = LocalContext.current
     val view = LocalView.current
-    val colorScheme = if (darkTheme) DarkCustomColorScheme else LightCustomColorScheme
+    val colorScheme = if (darkTheme) darkColorScheme(secondary = DarkCustomColorScheme.secondary) else lightColorScheme(secondary = LightCustomColorScheme.secondary)
     val systemUiController = rememberSystemUiController()
 
     SideEffect {

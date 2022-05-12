@@ -61,3 +61,4 @@ val DarkCustomColorScheme = darkColorScheme(
     onErrorContainer = Color(0xFFFFDAD4),
     outline = Color(0xFFA08D85),
 )
+val SheetScrimColor = Color.Black.copy(alpha = 0.4f)
