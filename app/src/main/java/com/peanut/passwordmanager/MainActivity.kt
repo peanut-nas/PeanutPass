@@ -32,20 +32,6 @@ class MainActivity : ComponentActivity() {
                 ProvideWindowInsets {
                     navController = rememberNavController()
                     SetupNavigation(navController = navController)
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        var password by remember {
-                            mutableStateOf(
-                                listOf("点我生成密码" to 1)
-                            )
-                        }
-                        BottomSheetPasswordGenerator { generated ->
-                            password = generated
-                        }
-                    }
                 }
             }
         }

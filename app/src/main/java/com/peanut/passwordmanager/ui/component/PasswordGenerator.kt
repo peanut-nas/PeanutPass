@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.peanut.passwordmanager.SettingManager
 import com.peanut.passwordmanager.util.generatePassword
@@ -82,7 +84,9 @@ fun PasswordGenerator(
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth(0.9f).padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -97,7 +101,8 @@ fun PasswordGenerator(
         }
         Row(
             modifier = Modifier.fillMaxWidth(0.9f),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Button(onClick = {
                 password =
@@ -120,4 +125,11 @@ fun PasswordGenerator(
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PasswordGeneratorPreview(){
+    SettingManager.init(LocalContext.current)
+    PasswordGenerator(onPasswordChanged = {})
 }

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Peanut Pass</string>
-    <string name="add_password">"Add Password"</string>
+    <string name="add_password">Add Password</string>
+    <string name="search_your_accounts">Search Accounts</string>
 </resources>
