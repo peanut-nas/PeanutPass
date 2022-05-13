@@ -22,17 +22,30 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.util.TopAppBarState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null) {
     var topAppBarState by remember { mutableStateOf(TopAppBarState.DEFAULT) }
     var searchTextState by remember { mutableStateOf("") }
-    when(topAppBarState){
+    val coroutineScope = rememberCoroutineScope()
+    when (topAppBarState) {
         TopAppBarState.DEFAULT -> {
-            DefaultHomeTopAppBar(scrollBehavior = scrollBehavior, onSearchClick = { topAppBarState = TopAppBarState.SEARCH })
+            DefaultHomeTopAppBar(scrollBehavior = scrollBehavior, onSearchClick = {
+                coroutineScope.launch {
+                    delay(200)
+                    topAppBarState = TopAppBarState.SEARCH
+                }
+            })
         }
         TopAppBarState.SEARCH -> {
-            SearchHomeTopAppBar(searchTextState, onSearchClick = {}, onCloseClick = { topAppBarState = TopAppBarState.DEFAULT }, onTextChange = { searchTextState = it })
+            SearchHomeTopAppBar(searchTextState, onSearchClick = {}, onCloseClick = {
+                coroutineScope.launch {
+                    delay(200)
+                    topAppBarState = TopAppBarState.DEFAULT
+                }
+            }, onTextChange = { searchTextState = it })
         }
     }
 }
@@ -95,9 +108,9 @@ fun SearchHomeTopAppBar(
         },
         actions = {
             IconButton(onClick = {
-                if (text.isNotEmpty()){
+                if (text.isNotEmpty()) {
                     onTextChange("")
-                }else {
+                } else {
                     onCloseClick()
                 }
             }) {
