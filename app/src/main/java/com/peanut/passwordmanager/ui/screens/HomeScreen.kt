@@ -1,31 +1,46 @@
 package com.peanut.passwordmanager.ui.screens
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.ui.component.AddFloatActionButton
 import com.peanut.passwordmanager.ui.component.HomeTopAppBar
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navigateToItemScreen: (Int) -> Unit){
+fun HomeScreen(navigateToItemScreen: (Int) -> Unit) {
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     Scaffold(
-        topBar = { HomeTopAppBar() },
-        content = {},
+        topBar = { HomeTopAppBar(scrollBehavior = scrollBehavior) },
+        content = {
+            LazyColumn(modifier = Modifier.padding(it)) {
+                items((1..99).toList()) { value ->
+                    Text(text = "$value F", modifier = Modifier.fillMaxWidth())
+                }
+            }
+        },
         floatingActionButton = {
-            AddFloatActionButton{
+            AddFloatActionButton {
                 println("AddFloatActionButton")
                 navigateToItemScreen(-1)
             }
-        }
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     )
 }
 
 @Composable
 @Preview(showBackground = true)
-fun HomeScreenPreview(){
+fun HomeScreenPreview() {
     HomeScreen(navigateToItemScreen = {})
 }
