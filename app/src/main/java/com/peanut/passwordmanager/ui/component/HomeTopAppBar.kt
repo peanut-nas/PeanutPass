@@ -9,7 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
 
@@ -21,7 +25,19 @@ fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null) {
 @Composable
 fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null, onSearch: () -> Unit) {
     BaseTopAppBar(
-        title = stringResource(id = R.string.app_name),
+        title = {
+            Text(
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("Peanut")
+                    }
+                    append(" ")
+                    append("Pass")
+                },
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         showBackNavigationIcon = false,
         scrollBehavior = scrollBehavior,
         onSearchClick = onSearch
@@ -30,7 +46,7 @@ fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null, onSear
 
 @Composable
 fun BaseTopAppBar(
-    title: String,
+    title: @Composable () -> Unit = {},
     showBackNavigationIcon: Boolean = false,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     onBackClick: () -> Unit = {},
@@ -47,13 +63,7 @@ fun BaseTopAppBar(
     // Wrapping in a Surface to handle window insets https://issuetracker.google.com/issues/183161866
     Surface(color = backgroundColor) {
         SmallTopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            },
+            title = title,
             actions = {
                 IconButton(onClick = { onSearchClick() }) {
                     Icon(
