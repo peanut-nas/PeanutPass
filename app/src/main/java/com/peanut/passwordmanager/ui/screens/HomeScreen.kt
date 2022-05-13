@@ -17,6 +17,7 @@ fun HomeScreen(navigateToItemScreen: (Int) -> Unit){
         content = {},
         floatingActionButton = {
             AddFloatActionButton{
+                println("AddFloatActionButton")
                 navigateToItemScreen(-1)
             }
         }

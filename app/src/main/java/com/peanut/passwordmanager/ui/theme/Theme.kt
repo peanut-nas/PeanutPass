@@ -25,12 +25,11 @@ fun PasswordManagerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @C
     SideEffect {
         systemUiController.setStatusBarColor(Color.Transparent)
         WindowCompat.getInsetsController(context.findActivity().window, view)
-            ?.isAppearanceLightStatusBars = !darkTheme
+            .isAppearanceLightStatusBars = !darkTheme
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        shapes = Shapes,
         typography = Typography,
         content = content
     )

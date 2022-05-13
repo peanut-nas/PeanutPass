@@ -15,7 +15,7 @@ fun SetupNavigation(navController: NavHostController){
     }
 
     NavHost(navController = navController, startDestination = HOME_SCREEN){
-        homeComposable { screen.item }
-        itemComposable { screen.home }
+        homeComposable(navigateToItemScreen = screen.item)
+        itemComposable(navigateToHomeScreen = screen.home)
     }
 }

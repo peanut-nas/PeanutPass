@@ -11,7 +11,7 @@ import com.peanut.passwordmanager.R
 
 @Composable
 fun AddFloatActionButton(onclick: () -> Unit) {
-    FloatingActionButton(onClick = { onclick.invoke() }) {
+    FloatingActionButton(onClick = { onclick() }) {
         Icon(
             imageVector = Icons.Rounded.Add,
             contentDescription = stringResource(id = R.string.add_password),
