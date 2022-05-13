@@ -12,12 +12,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.peanut.passwordmanager.navigation.SetupNavigation
 import com.peanut.passwordmanager.ui.component.BottomSheetPasswordGenerator
 import com.peanut.passwordmanager.ui.theme.PasswordManagerTheme
 
 
 class MainActivity : ComponentActivity() {
+    private lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SettingManager.init(this)
@@ -25,6 +30,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             PasswordManagerTheme {
                 ProvideWindowInsets {
+                    navController = rememberNavController()
+                    SetupNavigation(navController = navController)
                     // A surface container using the 'background' color from the theme
                     Surface(
                         modifier = Modifier.fillMaxSize(),

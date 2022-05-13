@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">PasswordManager</string>
+    <string name="app_name">Peanut Pass</string>
+    <string name="add_password">"Add Password"</string>
 </resources>
