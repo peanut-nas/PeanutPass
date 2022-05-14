@@ -1,36 +1,36 @@
 package com.peanut.passwordmanager.ui.screens
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Preview
-import com.peanut.passwordmanager.ui.component.SmallAccountItem
+import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.component.AddFloatActionButton
 import com.peanut.passwordmanager.ui.component.HomeTopAppBar
+import com.peanut.passwordmanager.ui.component.SmallAccountItem
+import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navigateToItemScreen: (Int) -> Unit) {
+fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    LaunchedEffect(key1 = true) {
+        sharedViewModel.getAllAccounts()
+    }
+    val allAccounts by sharedViewModel.allAccounts.collectAsState()
     Scaffold(
         topBar = { HomeTopAppBar(scrollBehavior = scrollBehavior) },
         content = {
-            LazyColumn(modifier = Modifier.padding(it)) {
-                items((1..19).toList()) {
-                    SmallAccountItem()
-                }
+            Column(modifier = Modifier.padding(it)) {
+                DetailContent(allAccounts = allAccounts, navigateToItemScreen = navigateToItemScreen)
             }
         },
         floatingActionButton = {
             AddFloatActionButton {
-                println("AddFloatActionButton")
                 navigateToItemScreen(-1)
             }
         },
@@ -39,7 +39,12 @@ fun HomeScreen(navigateToItemScreen: (Int) -> Unit) {
 }
 
 @Composable
-@Preview(showBackground = true)
-fun HomeScreenPreview() {
-    HomeScreen(navigateToItemScreen = {})
+fun DetailContent(allAccounts: List<Account>, navigateToItemScreen: (Int) -> Unit){
+    LazyColumn {
+        items(items = allAccounts, key = { account: Account ->
+            account.id
+        }) { account ->
+            SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen)
+        }
+    }
 }

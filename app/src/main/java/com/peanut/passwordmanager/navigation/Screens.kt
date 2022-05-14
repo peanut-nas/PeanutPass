@@ -6,6 +6,7 @@ import com.peanut.passwordmanager.util.Constants.HOME_SCREEN
 import com.peanut.passwordmanager.util.Constants.ITEM_SCREEN
 
 class Screens(navController: NavHostController) {
+
     val home: (Action)->Unit = {
         navController.navigate("home/${it.name}"){
             popUpTo(HOME_SCREEN)

@@ -13,5 +13,6 @@ data class Account(
     val account: String,
     val password: String,
     val accessTime: Long = System.currentTimeMillis(),
+    val createTime: Long = System.currentTimeMillis(),
     val accessTimes: Int = 0
 )

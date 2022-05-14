@@ -22,5 +22,4 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
             }
         }
     }
-
 }

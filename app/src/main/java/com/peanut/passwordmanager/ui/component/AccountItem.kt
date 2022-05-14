@@ -1,11 +1,7 @@
 package com.peanut.passwordmanager.ui.component
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.Icon
@@ -24,25 +20,26 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.theme.AccountIconBackground
 
 @Composable
-fun SmallAccountItem() {
+fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(70.dp)
-        .clickable { }) {
-        AccountIcon(accountName = "微软")
+        .clickable { navigateToItemScreen(account.id) }) {
+        AccountIcon(accountName = account.title)
         Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
             Text(
-                text = "Dribbble",
+                text = account.title,
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, fontSize = 20.sp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "example@email.com",
+                text = account.account,
                 modifier = Modifier.padding(bottom = 12.dp),
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.disabled)),
                 maxLines = 1,
@@ -53,11 +50,11 @@ fun SmallAccountItem() {
 }
 
 @Composable
-fun LargeAccountItem() {
+fun LargeAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit) {
     Box(modifier = Modifier
         .height(94.dp)
-        .clickable { }) {
-        AccountIcon(accountName = "微软", width = 70.dp, fontSize = 36.sp)
+        .clickable { navigateToItemScreen(account.id) }) {
+        AccountIcon(accountName = account.title, width = 70.dp, fontSize = 36.sp)
     }
 }
 
@@ -79,11 +76,11 @@ fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 46.dp, f
 @Composable
 @Preview(showBackground = true)
 fun AccountItemPreview() {
-    SmallAccountItem()
+    SmallAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def")){}
 }
 
 @Composable
 @Preview(showBackground = true)
 fun LargeAccountItemPreview() {
-    LargeAccountItem()
+    LargeAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def")){}
 }
