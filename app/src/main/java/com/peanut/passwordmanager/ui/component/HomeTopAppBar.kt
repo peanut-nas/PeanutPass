@@ -40,7 +40,7 @@ fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null) {
             })
         }
         TopAppBarState.SEARCH -> {
-            SearchHomeTopAppBar(searchTextState, onSearchClick = {}, onCloseClick = {
+            SearchHomeTopAppBar(text = searchTextState, scrollBehavior = scrollBehavior, onSearchClick = {}, onCloseClick = {
                 coroutineScope.launch {
                     delay(200)
                     topAppBarState = TopAppBarState.DEFAULT

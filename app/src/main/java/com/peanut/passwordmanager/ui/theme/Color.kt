@@ -1,7 +1,9 @@
 package com.peanut.passwordmanager.ui.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val LightCustomColorScheme = lightColorScheme(
@@ -61,4 +63,8 @@ val DarkCustomColorScheme = darkColorScheme(
     onErrorContainer = Color(0xFFFFDAD4),
     outline = Color(0xFFA08D85),
 )
+
 val SheetScrimColor = Color.Black.copy(alpha = 0.4f)
+val AccountIconBackground :Color
+@Composable
+get() = if (isSystemInDarkTheme()) Color(0xFF424242) else Color(0xFFF3E8E8)

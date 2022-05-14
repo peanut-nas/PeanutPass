@@ -1,4 +1,4 @@
-package com.peanut.passwordmanager
+package com.peanut.passwordmanager.util
 
 import android.content.Context
 import android.content.SharedPreferences
