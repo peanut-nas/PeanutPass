@@ -10,8 +10,9 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.peanut.passwordmanager.navigation.SetupNavigation
 import com.peanut.passwordmanager.ui.theme.PasswordManagerTheme
 import com.peanut.passwordmanager.util.SettingManager
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var navController: NavHostController
 
