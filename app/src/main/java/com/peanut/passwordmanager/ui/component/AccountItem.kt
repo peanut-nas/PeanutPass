@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.theme.AccountIconBackground
+import com.peanut.passwordmanager.util.AccountType
 
 @Composable
 fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit) {
@@ -39,12 +40,37 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = account.account,
+                text = getDisplayAccount(account),
                 modifier = Modifier.padding(bottom = 12.dp),
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.disabled)),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+        }
+    }
+}
+
+fun getDisplayAccount(account: Account): String{
+    when(account.accountType){
+        AccountType.Email -> {
+            val p = account.account.split("@")
+            return if (p[0].length > 4)
+                "${p[0].substring(0..1)}${"*".repeat(p[0].length-4)}${p[0].substring(p[0].length-2)}@${p[1]}"
+            else
+                "${"*".repeat(p[0].length)}${p[1]}"
+        }
+        AccountType.CardNumber -> {
+            return if (account.account.length > 4)
+                "${account.account.substring(0..1)}${"*".repeat(account.account.length-4)}${account.account.substring(account.account.length-2)}"
+            else
+                "*".repeat(account.account.length)
+        }
+        AccountType.PhoneNumber -> {
+            return "${account.account.substring(0..2)} **** ${account.account.substring(account.account.length-4)}"
+
+        }
+        AccountType.NickName -> {
+            return account.account
         }
     }
 }
@@ -59,7 +85,7 @@ fun LargeAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
 }
 
 @Composable
-fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 46.dp, fontSize: TextUnit = 24.sp) {
+private fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 46.dp, fontSize: TextUnit = 24.sp) {
     Surface(modifier = Modifier
         .padding(12.dp)
         .width(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)) {
@@ -76,11 +102,16 @@ fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 46.dp, f
 @Composable
 @Preview(showBackground = true)
 fun AccountItemPreview() {
-    SmallAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def")){}
+    Column {
+        SmallAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def", AccountType.Email)){}
+        SmallAccountItem(Account(0, "中国农业银行", "", "622848123456712345671234567", "abc********def", AccountType.CardNumber)){}
+        SmallAccountItem(Account(0, "Microsoft", "", "17712341234", "abc********def", AccountType.PhoneNumber)){}
+        SmallAccountItem(Account(0, "Bilibili", "", "花生酱啊啊啊啊", "abc********def", AccountType.NickName)){}
+    }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun LargeAccountItemPreview() {
-    LargeAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def")){}
+    LargeAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def", AccountType.Email)){}
 }
