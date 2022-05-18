@@ -16,6 +16,7 @@ fun NavGraphBuilder.itemComposable(navigateToHomeScreen: (Action) -> Unit){
             type = NavType.IntType
         })
     ){
+        val accountId = it.arguments!!.getInt("itemId")
         ItemScreen(navigateToItemScreen = navigateToHomeScreen)
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,12 +20,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.theme.AccountIconBackground
+import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.AccountType
+import kotlinx.coroutines.launch
 
 @Composable
-fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit) {
+fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit, sharedViewModel: SharedViewModel) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .height(70.dp)
@@ -39,8 +42,16 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            var actualAccountName by remember { mutableStateOf("") }
+            LaunchedEffect(key1 = true){
+                sharedViewModel.viewModelScope.launch {
+                    getDisplayAccount(account, sharedViewModel){accountName->
+                        actualAccountName = accountName
+                    }
+                }
+            }
             Text(
-                text = getDisplayAccount(account),
+                text = actualAccountName,
                 modifier = Modifier.padding(bottom = 12.dp),
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.disabled)),
                 maxLines = 1,
@@ -50,27 +61,36 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
     }
 }
 
-fun getDisplayAccount(account: Account): String{
+suspend fun getDisplayAccount(account: Account, sharedViewModel: SharedViewModel, prefix: String = "", onAccountNameFound: (String) -> Unit){
     when(account.accountType){
         AccountType.Email -> {
             val p = account.account.split("@")
-            return if (p[0].length > 4)
+            val name = if (p[0].length > 4)
                 "${p[0].substring(0..1)}${"*".repeat(p[0].length-4)}${p[0].substring(p[0].length-2)}@${p[1]}"
             else
                 "${"*".repeat(p[0].length)}${p[1]}"
+            onAccountNameFound(prefix+name)
         }
         AccountType.CardNumber -> {
-            return if (account.account.length > 4)
+            val name =  if (account.account.length > 4)
                 "${account.account.substring(0..1)}${"*".repeat(account.account.length-4)}${account.account.substring(account.account.length-2)}"
             else
                 "*".repeat(account.account.length)
+            onAccountNameFound(prefix+name)
         }
         AccountType.PhoneNumber -> {
-            return "${account.account.substring(0..2)} **** ${account.account.substring(account.account.length-4)}"
-
+            val name =  "${account.account.substring(0..2)} **** ${account.account.substring(account.account.length-4)}"
+            onAccountNameFound(prefix+name)
         }
         AccountType.NickName -> {
-            return account.account
+            val name =  account.account
+            onAccountNameFound(prefix+name)
+        }
+        AccountType.REFERENCE -> {
+            //引用类型代表使用第三方登录(如QQ),这里账户类别会是其余账号的id
+            sharedViewModel.getAccountById(account.account.toInt()).collect{
+                getDisplayAccount(it, sharedViewModel, "第三方: ", onAccountNameFound)
+            }
         }
     }
 }
@@ -96,17 +116,6 @@ private fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 
                 Text(text = accountName[0].toString(), fontSize = fontSize)
             }
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun AccountItemPreview() {
-    Column {
-        SmallAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def", AccountType.Email)){}
-        SmallAccountItem(Account(0, "中国农业银行", "", "622848123456712345671234567", "abc********def", AccountType.CardNumber)){}
-        SmallAccountItem(Account(0, "Microsoft", "", "17712341234", "abc********def", AccountType.PhoneNumber)){}
-        SmallAccountItem(Account(0, "Bilibili", "", "花生酱啊啊啊啊", "abc********def", AccountType.NickName)){}
     }
 }
 

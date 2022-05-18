@@ -40,7 +40,7 @@ fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewM
                         AccountContentPlaceholder(stringResource(id = R.string.empty_content))
                     else {
                         TopAccountsContent(allAccounts = (allAccounts as RequestState.Success<List<Account>>).data, navigateToItemScreen = navigateToItemScreen)
-                        AllAccountsContent(allAccounts = (allAccounts as RequestState.Success<List<Account>>).data, navigateToItemScreen = navigateToItemScreen)
+                        AllAccountsContent(allAccounts = (allAccounts as RequestState.Success<List<Account>>).data, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
                     }
                 }else if(allAccounts is RequestState.Error){
                     AccountContentPlaceholder((allAccounts as RequestState.Error).error.localizedMessage?:"出现未知错误")
@@ -71,12 +71,12 @@ fun EmptyAccountContentPreview(){
 }
 
 @Composable
-fun AllAccountsContent(allAccounts: List<Account>, navigateToItemScreen: (Int) -> Unit){
+fun AllAccountsContent(allAccounts: List<Account>, navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel){
     LazyColumn {
         items(items = allAccounts, key = { account: Account ->
             account.id
         }) { account ->
-            SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen)
+            SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
         }
     }
 }

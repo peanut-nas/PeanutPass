@@ -28,4 +28,6 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
             }
         }
     }
+
+    fun getAccountById(id: Int) = repository.getSelectedAccount(accountId = id)
 }
