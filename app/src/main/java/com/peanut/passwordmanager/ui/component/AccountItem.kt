@@ -37,15 +37,17 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
         Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
             Text(
                 text = account.title,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clickable { },
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, fontSize = 20.sp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             var actualAccountName by remember { mutableStateOf("") }
-            LaunchedEffect(key1 = true){
+            LaunchedEffect(key1 = true) {
                 sharedViewModel.viewModelScope.launch {
-                    getDisplayAccount(account, sharedViewModel){accountName->
+                    getDisplayAccount(account, sharedViewModel) { accountName ->
                         actualAccountName = accountName
                     }
                 }
@@ -58,38 +60,39 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
                 overflow = TextOverflow.Ellipsis
             )
         }
+        CopyAction(text = account.password)
     }
 }
 
-suspend fun getDisplayAccount(account: Account, sharedViewModel: SharedViewModel, prefix: String = "", onAccountNameFound: (String) -> Unit){
-    when(account.accountType){
+suspend fun getDisplayAccount(account: Account, sharedViewModel: SharedViewModel, prefix: String = "", onAccountNameFound: (String) -> Unit) {
+    when (account.accountType) {
         AccountType.Email -> {
             val p = account.account.split("@")
             val name = if (p[0].length > 4)
-                "${p[0].substring(0..1)}${"*".repeat(p[0].length-4)}${p[0].substring(p[0].length-2)}@${p[1]}"
+                "${p[0].substring(0..1)}${"*".repeat(p[0].length - 4)}${p[0].substring(p[0].length - 2)}@${p[1]}"
             else
                 "${"*".repeat(p[0].length)}${p[1]}"
-            onAccountNameFound(prefix+name)
+            onAccountNameFound(prefix + (if (prefix.isNotEmpty()) "(${account.title}): " else "") + name)
         }
         AccountType.CardNumber -> {
-            val name =  if (account.account.length > 4)
-                "${account.account.substring(0..1)}${"*".repeat(account.account.length-4)}${account.account.substring(account.account.length-2)}"
+            val name = if (account.account.length > 4)
+                "${account.account.substring(0..1)}${"*".repeat(account.account.length - 4)}${account.account.substring(account.account.length - 2)}"
             else
                 "*".repeat(account.account.length)
-            onAccountNameFound(prefix+name)
+            onAccountNameFound(prefix + (if (prefix.isNotEmpty()) "(${account.title}): " else "") + name)
         }
         AccountType.PhoneNumber -> {
-            val name =  "${account.account.substring(0..2)} **** ${account.account.substring(account.account.length-4)}"
-            onAccountNameFound(prefix+name)
+            val name = "${account.account.substring(0..2)} **** ${account.account.substring(account.account.length - 4)}"
+            onAccountNameFound(prefix + (if (prefix.isNotEmpty()) "(${account.title}): " else "") + name)
         }
         AccountType.NickName -> {
-            val name =  account.account
-            onAccountNameFound(prefix+name)
+            val name = account.account
+            onAccountNameFound(prefix + (if (prefix.isNotEmpty()) "(${account.title}): " else "") + name)
         }
-        AccountType.REFERENCE -> {
+        AccountType.Reference -> {
             //引用类型代表使用第三方登录(如QQ),这里账户类别会是其余账号的id
-            sharedViewModel.getAccountById(account.account.toInt()).collect{
-                getDisplayAccount(it, sharedViewModel, "第三方: ", onAccountNameFound)
+            sharedViewModel.getAccountById(account.account.toInt()).collect {
+                getDisplayAccount(it, sharedViewModel, "第三方", onAccountNameFound)
             }
         }
     }
@@ -106,9 +109,11 @@ fun LargeAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
 
 @Composable
 private fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 46.dp, fontSize: TextUnit = 24.sp) {
-    Surface(modifier = Modifier
-        .padding(12.dp)
-        .width(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)) {
+    Surface(
+        modifier = Modifier
+            .padding(12.dp)
+            .width(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)
+    ) {
         if (icon != null)
             Icon(painter = icon, contentDescription = "Account Icon Background", tint = Color.Unspecified)
         else if (accountName.isNotEmpty()) {
@@ -122,5 +127,5 @@ private fun AccountIcon(accountName: String, icon: Painter? = null, width: Dp = 
 @Composable
 @Preview(showBackground = true)
 fun LargeAccountItemPreview() {
-    LargeAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def", AccountType.Email)){}
+    LargeAccountItem(Account(0, "Microsoft", "", "panrunqiu@outlook.com", "abc********def", AccountType.Email)) {}
 }

@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">Peanut Pass</string>
     <string name="add_password">Add Password</string>
+    <string name="add_account">Add Account</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="update_account">Update Account</string>
+    <string name="select_account_type">Select Account Type</string>
     <string name="search_your_accounts">Search Accounts</string>
     <string name="go_back">Go Back</string>
     <string name="close_search">Close Search</string>
+    <string name="close_account">Close Account</string>
     <string name="empty_content">No Accounts Found.</string>
 </resources>

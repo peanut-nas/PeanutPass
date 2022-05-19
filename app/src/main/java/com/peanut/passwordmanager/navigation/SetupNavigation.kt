@@ -17,6 +17,6 @@ fun SetupNavigation(navController: NavHostController, sharedViewModel: SharedVie
 
     NavHost(navController = navController, startDestination = HOME_SCREEN){
         homeComposable(navigateToItemScreen = screen.item, sharedViewModel)
-        itemComposable(navigateToHomeScreen = screen.home)
+        itemComposable(navigateToHomeScreen = screen.home, sharedViewModel)
     }
 }

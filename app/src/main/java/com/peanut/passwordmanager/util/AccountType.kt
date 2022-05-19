@@ -5,5 +5,5 @@ enum class AccountType {
     CardNumber,
     PhoneNumber,
     NickName,
-    REFERENCE
+    Reference
 }

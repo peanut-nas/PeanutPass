@@ -2,12 +2,14 @@ package com.peanut.passwordmanager.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.data.repositories.AccountRepository
 import com.peanut.passwordmanager.util.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,4 +32,15 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
     }
 
     fun getAccountById(id: Int) = repository.getSelectedAccount(accountId = id)
+
+    private val _selectedAccount = MutableStateFlow<Account?>(null)
+    val selectedAccount: StateFlow<Account?> = _selectedAccount
+    
+    fun getSelectedAccount(id: Int){
+        viewModelScope.launch {
+            repository.getSelectedAccount(id).collect{ account ->
+                _selectedAccount.value = account
+            }
+        }
+    }
 }
