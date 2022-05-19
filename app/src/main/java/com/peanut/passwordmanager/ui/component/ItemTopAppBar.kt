@@ -3,12 +3,14 @@ package com.peanut.passwordmanager.ui.component
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.util.Action
 
@@ -28,7 +30,7 @@ fun AddTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null, navigateToHome
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Add Account")
+                        append(stringResource(id = R.string.add_account))
                     }
                 },
                 maxLines = 1,

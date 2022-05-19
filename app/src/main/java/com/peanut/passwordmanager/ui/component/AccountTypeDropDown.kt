@@ -23,34 +23,35 @@ fun AccountTypeDropDown(accountType: AccountType, onAccountTypeSelected: (Accoun
     val angle: Float by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
 
     Row(modifier = Modifier
-        .fillMaxWidth().clickable { expanded = true }, verticalAlignment = Alignment.CenterVertically) {
+        .fillMaxWidth()
+        .clickable { expanded = true }, verticalAlignment = Alignment.CenterVertically) {
         Text(text = "Account Type: ")
         Row(modifier = Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,verticalAlignment = Alignment.CenterVertically) {
-            Text(text = accountType.name)
+            Text(text = stringResource(id = accountType.typeNameStringResourceId))
             IconButton(onClick = { expanded = true }) {
                 Icon(modifier = Modifier.rotate(angle), imageVector = Icons.Rounded.ArrowDropDown, contentDescription = stringResource(id = R.string.select_account_type))
             }
         }
         DropdownMenu(modifier = Modifier
             .fillMaxWidth(), expanded = expanded, onDismissRequest = { expanded = false }) {
-            DropdownMenuItem(text = { Text(text = AccountType.Email.name) }, onClick = {
+            DropdownMenuItem(text = { Text(text = stringResource(id = AccountType.Email.typeNameStringResourceId)) }, onClick = {
                 expanded = false
                 onAccountTypeSelected(AccountType.Email)
             })
-            DropdownMenuItem(text = { Text(text = AccountType.CardNumber.name) }, onClick = {
+            DropdownMenuItem(text = { Text(text = stringResource(id = AccountType.CardNumber.typeNameStringResourceId)) }, onClick = {
                 expanded = false
                 onAccountTypeSelected(AccountType.CardNumber)
             })
-            DropdownMenuItem(text = { Text(text = AccountType.PhoneNumber.name) }, onClick = {
+            DropdownMenuItem(text = { Text(text = stringResource(id = AccountType.PhoneNumber.typeNameStringResourceId)) }, onClick = {
                 expanded = false
                 onAccountTypeSelected(AccountType.PhoneNumber)
             })
-            DropdownMenuItem(text = { Text(text = AccountType.NickName.name) }, onClick = {
+            DropdownMenuItem(text = { Text(text = stringResource(id = AccountType.NickName.typeNameStringResourceId)) }, onClick = {
                 expanded = false
                 onAccountTypeSelected(AccountType.NickName)
             })
-            DropdownMenuItem(text = { Text(text = AccountType.Reference.name) }, onClick = {
+            DropdownMenuItem(text = { Text(text = stringResource(id = AccountType.Reference.typeNameStringResourceId)) }, onClick = {
                 expanded = false
                 onAccountTypeSelected(AccountType.Reference)
             })

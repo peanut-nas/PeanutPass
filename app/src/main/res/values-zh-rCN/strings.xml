@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Peanut Pass</string>
+    <string name="add_password">添加密码</string>
+    <string name="add_account">添加账号</string>
+    <string name="delete_account">删除账号</string>
+    <string name="update_account">更新账号</string>
+    <string name="select_account_type">选择账号类型</string>
+    <string name="search_your_accounts">搜索账号</string>
+    <string name="go_back">返回</string>
+    <string name="close_search">关闭搜索</string>
+    <string name="close_account">关闭账户</string>
+    <string name="empty_content">找不到任何账户</string>
+    <string name="account_type_email">电子邮件</string>
+    <string name="account_type_card_number">卡号</string>
+    <string name="account_type_phone_number">手机号</string>
+    <string name="account_type_nickname">昵称</string>
+    <string name="account_type_reference">第三方登录</string>
+    <string name="platform_name">账号平台</string>
+</resources>

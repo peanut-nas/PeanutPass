@@ -28,14 +28,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
+import com.peanut.passwordmanager.ui.component.AccountTypeDropDown
 import com.peanut.passwordmanager.ui.component.BottomSheetPasswordGenerator
 import com.peanut.passwordmanager.ui.component.ItemTopAppBar
 import com.peanut.passwordmanager.ui.theme.AccountIconBackground
+import com.peanut.passwordmanager.util.AccountType
 import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.AdditionalFunctions.copyFile
 import com.peanut.passwordmanager.util.clearType
@@ -84,10 +87,13 @@ fun ItemScreenContent(password: List<Pair<String, Int>>, account: Account?, onOp
                 }
             }
         }
-        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = {}, label = { Text(text = "Account Name")})
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "${stringResource(id = R.string.platform_name)}: ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = {}, label = { Text(text = "Account Name")})
+        }
         OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = {}, label = { Text(text = "Account")})
-        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = {}, label = { Text(text = "Account Type")})
-        OutlinedTextField(modifier = Modifier.fillMaxWidth(), value = "", onValueChange = {}, readOnly = true, label = { Text(text = "Password")})
+        AccountTypeDropDown(accountType = AccountType.Email, onAccountTypeSelected = {})
     }
 }
 
