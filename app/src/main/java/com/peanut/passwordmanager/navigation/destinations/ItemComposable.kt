@@ -1,5 +1,6 @@
 package com.peanut.passwordmanager.navigation.destinations
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
@@ -22,6 +23,11 @@ fun NavGraphBuilder.itemComposable(navigateToHomeScreen: (Action) -> Unit, share
         val accountId = it.arguments!!.getInt("itemId")
         sharedViewModel.getSelectedAccount(accountId)
         val selectedAccount by sharedViewModel.selectedAccount.collectAsState()
+
+        LaunchedEffect(key1 = accountId){
+            sharedViewModel.updateAccountFields(selectedAccount = selectedAccount)
+        }
+
         ItemScreen(navigateToHomeScreen = navigateToHomeScreen, selectedAccount = selectedAccount, sharedViewModel = sharedViewModel)
     }
 }

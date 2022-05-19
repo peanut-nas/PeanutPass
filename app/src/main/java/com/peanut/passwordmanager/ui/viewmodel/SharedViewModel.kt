@@ -53,4 +53,15 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
     val password: MutableState<String> = mutableStateOf("点我生成密码")
     val icon: MutableState<String> = mutableStateOf("")
     val accountType: MutableState<AccountType> = mutableStateOf(AccountType.NickName)
+
+    fun updateAccountFields(selectedAccount: Account?){
+        if (selectedAccount != null){
+            id.value = selectedAccount.id
+            title.value = selectedAccount.title
+            account.value = selectedAccount.account
+            accountType.value = selectedAccount.accountType
+            password.value = selectedAccount.password
+            icon.value = selectedAccount.icon
+        }
+    }
 }

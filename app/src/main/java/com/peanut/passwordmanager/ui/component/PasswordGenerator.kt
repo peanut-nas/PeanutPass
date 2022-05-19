@@ -116,7 +116,10 @@ fun PasswordGenerator(
                     Text(text = "不满意？点我重新生成")
                 }
             }
-            Button(onClick = { onDone?.invoke() }) {
+            Button(onClick = {
+                onDone?.invoke()
+                onPasswordChanged.invoke(password)
+            }) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Rounded.Done, contentDescription = "选择这个密码")
                     Spacer(modifier = Modifier.width(8.dp))

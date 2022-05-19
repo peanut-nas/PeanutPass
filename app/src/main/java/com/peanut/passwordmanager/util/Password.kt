@@ -38,9 +38,7 @@ fun List<Pair<String, Int>>.clearType(): String{
 fun guessTypeFromString(password: String): List<Pair<String, Int>>{
     val sb = mutableListOf<Pair<String, Int>>()
     for (i in password) {
-        val type = if (i in basic || i in upper) 0 else {
-            if (i in number) 1 else 2
-        }
+        val type = if (i in basic || i in upper) 0 else if (i in number) 1 else if (i in symbol) 2 else 0
         sb.add(i.toString() to type)
     }
     return sb

@@ -26,13 +26,13 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
     val accountType by sharedViewModel.accountType
     val password by sharedViewModel.password
 
-    Scaffold(
-        topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = navigateToHomeScreen, selectedAccount = selectedAccount) },
-        content = {
-            Surface(modifier = Modifier.padding(it)) {
-                val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-                val coroutineScope = rememberCoroutineScope()
-                BottomSheetPasswordGenerator(sheetState, coroutineScope, content = {
+    val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
+    BottomSheetPasswordGenerator(sheetState, coroutineScope, content = {
+        Scaffold(
+            topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = navigateToHomeScreen, selectedAccount = selectedAccount) },
+            content = {
+                Surface(modifier = Modifier.padding(it)) {
                     ItemScreenContent(
                         title = title,
                         account = account,
@@ -45,13 +45,16 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
                         onAccountTypeChanged = { accountType: AccountType -> sharedViewModel.accountType.value = accountType },
                         onPasswordChanged = { password -> sharedViewModel.password.value = password }
                     ){ coroutineScope.launch { sheetState.show() } }
-                }) { generated ->
-                    sharedViewModel.password.value = generated
                 }
-            }
-        },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    )
+            },
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        )
+    }) { generated ->
+        if (sheetState.isVisible)
+            sharedViewModel.password.value = generated
+    }
+
+
 }
 
 

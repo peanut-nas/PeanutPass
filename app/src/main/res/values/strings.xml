@@ -10,7 +10,10 @@
     <string name="close_search">Close Search</string>
     <string name="close_account">Close Account</string>
     <string name="empty_content">No Accounts Found.</string>
-    <string name="platform_name">Account Name</string>
+    <string name="platform_name">Platform Name</string>
+    <string name="account_name">Account Name</string>
+    <string name="account_type">Account Type</string>
+    <string name="password">Account Type</string>
     <string name="account_type_email">Email</string>
     <string name="account_type_card_number">CardNumber</string>
     <string name="account_type_phone_number">PhoneNumber</string>
