@@ -1,10 +1,13 @@
 package com.peanut.passwordmanager.ui.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.data.repositories.AccountRepository
+import com.peanut.passwordmanager.util.AccountType
 import com.peanut.passwordmanager.util.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,4 +46,11 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
             }
         }
     }
+
+    val id: MutableState<Int> = mutableStateOf(0)
+    val title: MutableState<String> = mutableStateOf("")
+    val account: MutableState<String> = mutableStateOf("")
+    val password: MutableState<String> = mutableStateOf("点我生成密码")
+    val icon: MutableState<String> = mutableStateOf("")
+    val accountType: MutableState<AccountType> = mutableStateOf(AccountType.NickName)
 }

@@ -1,4 +1,4 @@
-package com.peanut.passwordmanager.ui.component
+package com.peanut.passwordmanager.ui.screens.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add

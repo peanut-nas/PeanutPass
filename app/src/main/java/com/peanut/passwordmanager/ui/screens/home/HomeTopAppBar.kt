@@ -1,4 +1,4 @@
-package com.peanut.passwordmanager.ui.component
+package com.peanut.passwordmanager.ui.screens.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -21,6 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
+import com.peanut.passwordmanager.ui.component.BaseTopAppBar
+import com.peanut.passwordmanager.ui.component.SearchAction
 import com.peanut.passwordmanager.util.TopAppBarState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

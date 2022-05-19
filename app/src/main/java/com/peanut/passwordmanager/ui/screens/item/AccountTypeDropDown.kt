@@ -1,4 +1,4 @@
-package com.peanut.passwordmanager.ui.component
+package com.peanut.passwordmanager.ui.screens.item
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable

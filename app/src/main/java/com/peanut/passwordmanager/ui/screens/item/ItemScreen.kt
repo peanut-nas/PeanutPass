@@ -1,0 +1,58 @@
+package com.peanut.passwordmanager.ui.screens.item
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.peanut.passwordmanager.data.models.Account
+import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
+import com.peanut.passwordmanager.util.AccountType
+import com.peanut.passwordmanager.util.Action
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?, sharedViewModel: SharedViewModel){
+    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val title by sharedViewModel.title
+    val account by sharedViewModel.account
+    val icon by sharedViewModel.icon
+    val accountType by sharedViewModel.accountType
+    val password by sharedViewModel.password
+
+    Scaffold(
+        topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = navigateToHomeScreen, selectedAccount = selectedAccount) },
+        content = {
+            Surface(modifier = Modifier.padding(it)) {
+                val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+                val coroutineScope = rememberCoroutineScope()
+                BottomSheetPasswordGenerator(sheetState, coroutineScope, content = {
+                    ItemScreenContent(
+                        title = title,
+                        account = account,
+                        icon = icon,
+                        accountType = accountType,
+                        password = password,
+                        onTitleChanged = { title -> sharedViewModel.title.value = title },
+                        onAccountChanged = { account -> sharedViewModel.account.value = account },
+                        onIconChanged = { icon -> sharedViewModel.icon.value = icon },
+                        onAccountTypeChanged = { accountType: AccountType -> sharedViewModel.accountType.value = accountType },
+                        onPasswordChanged = { password -> sharedViewModel.password.value = password }
+                    ){ coroutineScope.launch { sheetState.show() } }
+                }) { generated ->
+                    sharedViewModel.password.value = generated
+                }
+            }
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    )
+}
+
+
+

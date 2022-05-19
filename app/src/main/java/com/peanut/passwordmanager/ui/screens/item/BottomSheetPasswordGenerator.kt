@@ -1,4 +1,4 @@
-package com.peanut.passwordmanager.ui.component
+package com.peanut.passwordmanager.ui.screens.item
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -14,14 +14,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.peanut.passwordmanager.ui.component.PasswordGenerator
 import com.peanut.passwordmanager.ui.theme.SheetScrimColor
 import com.peanut.passwordmanager.ui.theme.SheetShape
+import com.peanut.passwordmanager.util.clearType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetPasswordGenerator(sheetState: ModalBottomSheetState, coroutineScope: CoroutineScope, content: @Composable () -> Unit, onPasswordChanged: (List<Pair<String, Int>>) -> Unit) {
+fun BottomSheetPasswordGenerator(sheetState: ModalBottomSheetState, coroutineScope: CoroutineScope, content: @Composable () -> Unit, onPasswordChanged: (String) -> Unit) {
     val containerColor = MaterialTheme.colorScheme.surfaceVariant
     val contentColor = contentColorFor(containerColor)
     ModalBottomSheetLayout(
@@ -42,9 +44,7 @@ fun BottomSheetPasswordGenerator(sheetState: ModalBottomSheetState, coroutineSco
                     fontFamily = FontFamily.SansSerif
                 )
                 PasswordGenerator(onPasswordChanged = { password ->
-                    onPasswordChanged.invoke(
-                        password
-                    )
+                    onPasswordChanged(password.clearType())
                 }) {
                     coroutineScope.launch { sheetState.hide() }
                 }

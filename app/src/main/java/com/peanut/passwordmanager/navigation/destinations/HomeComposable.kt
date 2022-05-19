@@ -4,7 +4,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.peanut.passwordmanager.ui.screens.HomeScreen
+import com.peanut.passwordmanager.ui.screens.home.HomeScreen
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.Constants.HOME_SCREEN
 
