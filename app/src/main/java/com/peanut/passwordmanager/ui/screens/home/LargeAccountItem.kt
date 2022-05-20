@@ -16,7 +16,7 @@ fun LargeAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
     Box(modifier = Modifier
         .height(94.dp)
         .clickable { navigateToItemScreen(account.id) }) {
-        AccountIcon(accountName = account.title, width = 70.dp, fontSize = 36.sp)
+        AccountIcon(accountName = account.title, icon = account.icon, width = 70.dp, fontSize = 36.sp)
     }
 }
 

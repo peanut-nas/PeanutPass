@@ -24,7 +24,7 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
         .fillMaxWidth()
         .height(70.dp)
         .clickable { navigateToItemScreen(account.id) }) {
-        AccountIcon(accountName = account.title)
+        AccountIcon(accountName = account.title, icon = account.icon)
         Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
             Text(
                 text = account.title,

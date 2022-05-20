@@ -70,7 +70,7 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
     fun validateFields(): Boolean {
         return title.value.isNotEmpty() &&
                 account.value.isNotEmpty() &&
-                password.value.isNotEmpty()
+                password.value.isNotEmpty() && password.value != "点我生成密码"
     }
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
