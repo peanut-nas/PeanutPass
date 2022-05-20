@@ -3,6 +3,7 @@ package com.peanut.passwordmanager.ui.screens.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -17,14 +18,23 @@ import com.peanut.passwordmanager.util.RequestState
 @Composable
 fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val action by sharedViewModel.action
+
+    val scaffoldState = rememberScaffoldState()
+    DisplaySnackBar(scaffoldState = scaffoldState, handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action = action) }, action = action, accountTitle = sharedViewModel.title.value)
+
     LaunchedEffect(key1 = true) {
         sharedViewModel.getAllAccounts()
     }
     val allAccounts by sharedViewModel.allAccounts.collectAsState()
-    Scaffold(
+    //todo: replace with material3 when passable
+    androidx.compose.material.Scaffold(
+        scaffoldState = scaffoldState,
         topBar = { HomeTopAppBar(scrollBehavior = scrollBehavior) },
         content = {
-            Column(modifier = Modifier.padding(it).fillMaxSize()) {
+            Column(modifier = Modifier
+                .padding(it)
+                .fillMaxSize()) {
                 if (allAccounts is RequestState.Success) {
                     if ((allAccounts as RequestState.Success<List<Account>>).data.isEmpty())
                         AccountContentPlaceholder(stringResource(id = R.string.empty_content))

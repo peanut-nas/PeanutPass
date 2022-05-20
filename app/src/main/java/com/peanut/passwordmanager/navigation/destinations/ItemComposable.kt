@@ -24,7 +24,7 @@ fun NavGraphBuilder.itemComposable(navigateToHomeScreen: (Action) -> Unit, share
         sharedViewModel.getSelectedAccount(accountId)
         val selectedAccount by sharedViewModel.selectedAccount.collectAsState()
 
-        LaunchedEffect(key1 = accountId){
+        LaunchedEffect(key1 = selectedAccount){
             sharedViewModel.updateAccountFields(selectedAccount = selectedAccount)
         }
 

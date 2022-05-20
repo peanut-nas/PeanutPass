@@ -1,5 +1,6 @@
 package com.peanut.passwordmanager.ui.screens.item
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -10,6 +11,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.AccountType
@@ -28,9 +32,21 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
 
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val validateErrorText = stringResource(id = R.string.account_input_not_validate)
     BottomSheetPasswordGenerator(sheetState, coroutineScope, content = {
         Scaffold(
-            topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = navigateToHomeScreen, selectedAccount = selectedAccount) },
+            topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = { action: Action ->
+                if (action == Action.NO_ACTION){
+                    navigateToHomeScreen(action)
+                }else{
+                    if (sharedViewModel.validateFields()){
+                        navigateToHomeScreen(action)
+                    }else{
+                        Toast.makeText(context, validateErrorText, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }, selectedAccount = selectedAccount) },
             content = {
                 Surface(modifier = Modifier.padding(it)) {
                     ItemScreenContent(

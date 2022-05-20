@@ -20,4 +20,10 @@
     <string name="account_name">账号名</string>
     <string name="account_type">账号类别</string>
     <string name="password">密码</string>
+    <string name="account_input_not_validate">账号信息不完整</string>
+    <string name="action_add">添加账号</string>
+    <string name="action_update">更新账号</string>
+    <string name="action_delete">删除账号</string>
+    <string name="action_undo">撤销操作</string>
+    <string name="action_no_action">啥也不干</string>
 </resources>

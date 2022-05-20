@@ -14,6 +14,12 @@
     <string name="account_name">Account Name</string>
     <string name="account_type">Account Type</string>
     <string name="password">Account Type</string>
+    <string name="action_add">Add Account</string>
+    <string name="action_update">Update Account</string>
+    <string name="action_delete">Delete Account</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_no_action">Ignore</string>
+    <string name="account_input_not_validate">Account Fields Empty</string>
     <string name="account_type_email">Email</string>
     <string name="account_type_card_number">CardNumber</string>
     <string name="account_type_phone_number">PhoneNumber</string>

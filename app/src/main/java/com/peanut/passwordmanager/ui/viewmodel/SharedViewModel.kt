@@ -8,8 +8,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.data.repositories.AccountRepository
 import com.peanut.passwordmanager.util.AccountType
+import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.RequestState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -62,6 +64,38 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
             accountType.value = selectedAccount.accountType
             password.value = selectedAccount.password
             icon.value = selectedAccount.icon
+        }
+    }
+
+    fun validateFields(): Boolean {
+        return title.value.isNotEmpty() &&
+                account.value.isNotEmpty() &&
+                password.value.isNotEmpty()
+    }
+
+    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+
+    fun handleDatabaseActions(action: Action){
+        when(action){
+            Action.ADD -> addAccount()
+            Action.UPDATE -> {}
+            Action.DELETE -> {}
+            Action.UNDO -> {}
+            else -> {}
+        }
+        this.action.value = Action.NO_ACTION
+    }
+
+    private fun addAccount(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val account = Account(
+                title = title.value,
+                icon = icon.value,
+                account = account.value,
+                password = password.value,
+                accountType = accountType.value
+            )
+            repository.addAccount(account)
         }
     }
 }
