@@ -34,6 +34,7 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val validateErrorText = stringResource(id = R.string.account_input_not_validate)
+    BackHandler(onBackPressed = { navigateToHomeScreen(Action.NO_ACTION) })
     BottomSheetPasswordGenerator(sheetState, coroutineScope, content = {
         Scaffold(
             topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = { action: Action ->
