@@ -20,8 +20,11 @@ fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewM
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     val action by sharedViewModel.action
 
+    //todo: bug: 实体键返回时没有清除Action
     val scaffoldState = rememberScaffoldState()
-    DisplaySnackBar(scaffoldState = scaffoldState, handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action = action) }, action = action, accountTitle = sharedViewModel.title.value)
+    DisplaySnackBar(scaffoldState = scaffoldState, handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action = action) }, action = action, accountTitle = sharedViewModel.title.value){
+        sharedViewModel.action.value = it
+    }
 
     LaunchedEffect(key1 = true) {
         sharedViewModel.getAllAccounts()

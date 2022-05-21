@@ -1,24 +1,45 @@
 package com.peanut.passwordmanager.ui.screens.home
 
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.util.Action
 import kotlinx.coroutines.launch
 
 @Composable
-fun DisplaySnackBar(scaffoldState: ScaffoldState, handleDatabaseActions: () -> Unit, action: Action, accountTitle: String){
+fun DisplaySnackBar(scaffoldState: ScaffoldState,
+                    handleDatabaseActions: () -> Unit,
+                    action: Action,
+                    accountTitle: String,
+                    onUndoClicked: (Action) -> Unit){
     handleDatabaseActions()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val undo = stringResource(id = R.string.action_undo)
+    val ok = stringResource(id = R.string.action_ok)
     LaunchedEffect(key1 = action){
         if (action != Action.NO_ACTION){
             scope.launch {
                 val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
                     message = "${context.resources.getString(action.actionNameStringResourceId)}: $accountTitle",
-                    actionLabel = "OK"
+                    actionLabel = setActionLabel(action, undo, ok)
                 )
+                undoDeleteAccount(action, snackBarResult, onUndoClicked)
             }
         }
     }
+}
+
+private fun setActionLabel(action: Action, undo: String, ok: String): String{
+    return if (action.name == "DELETE")
+        undo
+    else ok
+}
+
+private fun undoDeleteAccount(action: Action, snackBarResult: SnackbarResult, onUndoClicked: (Action) -> Unit){
+    if (snackBarResult == SnackbarResult.ActionPerformed && action == Action.DELETE)
+        onUndoClicked(Action.UNDO)
 }

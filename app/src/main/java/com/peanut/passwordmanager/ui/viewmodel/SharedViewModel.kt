@@ -78,9 +78,9 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
     fun handleDatabaseActions(action: Action){
         when(action){
             Action.ADD -> addAccount()
-            Action.UPDATE -> {}
-            Action.DELETE -> {}
-            Action.UNDO -> {}
+            Action.UPDATE -> updateAccount()
+            Action.DELETE -> deleteAccount()
+            Action.UNDO -> addAccount()
             else -> {}
         }
         this.action.value = Action.NO_ACTION
@@ -96,6 +96,34 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
                 accountType = accountType.value
             )
             repository.addAccount(account)
+        }
+    }
+
+    private fun updateAccount(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val account = Account(
+                id = id.value,
+                title = title.value,
+                icon = icon.value,
+                account = account.value,
+                password = password.value,
+                accountType = accountType.value
+            )
+            repository.updateAccount(account)
+        }
+    }
+
+    private fun deleteAccount(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val account = Account(
+                id = id.value,
+                title = title.value,
+                icon = icon.value,
+                account = account.value,
+                password = password.value,
+                accountType = accountType.value
+            )
+            repository.deleteAccount(account)
         }
     }
 }

@@ -17,6 +17,8 @@
     <string name="action_add">Add Account</string>
     <string name="action_update">Update Account</string>
     <string name="action_delete">Delete Account</string>
+    <string name="action_delete_unfo">Undo</string>
+    <string name="action_ok">OK</string>
     <string name="action_undo">Undo</string>
     <string name="action_no_action">Ignore</string>
     <string name="account_input_not_validate">Account Fields Empty</string>
