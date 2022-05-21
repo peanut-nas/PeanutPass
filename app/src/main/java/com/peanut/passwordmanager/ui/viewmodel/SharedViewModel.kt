@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.data.repositories.AccountRepository
+import com.peanut.passwordmanager.data.repositories.DataStoreRepository
 import com.peanut.passwordmanager.util.AccountType
 import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.RequestState
+import com.peanut.passwordmanager.util.TopAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,18 +21,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedViewModel @Inject constructor(private val repository: AccountRepository): ViewModel() {
+class SharedViewModel @Inject constructor(
+    private val repository: AccountRepository,
+    private val dataStoreRepository: DataStoreRepository
+) : ViewModel() {
     private val _allAccounts = MutableStateFlow<RequestState<List<Account>>>(RequestState.Idle)
     val allAccounts: StateFlow<RequestState<List<Account>>> = _allAccounts
 
-    fun getAllAccounts(){
+    fun getAllAccounts() {
         _allAccounts.value = RequestState.Loading
         viewModelScope.launch {
             try {
-                repository.getAllAccounts.collect{
+                repository.getAllAccounts.collect {
                     _allAccounts.value = RequestState.Success(it)
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 _allAccounts.value = RequestState.Error(e)
             }
         }
@@ -40,10 +45,10 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
 
     private val _selectedAccount = MutableStateFlow<Account?>(null)
     val selectedAccount: StateFlow<Account?> = _selectedAccount
-    
-    fun getSelectedAccount(id: Int){
+
+    fun getSelectedAccount(id: Int) {
         viewModelScope.launch {
-            repository.getSelectedAccount(id).collect{ account ->
+            repository.getSelectedAccount(id).collect { account ->
                 _selectedAccount.value = account
             }
         }
@@ -56,8 +61,8 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
     val icon: MutableState<String> = mutableStateOf("")
     val accountType: MutableState<AccountType> = mutableStateOf(AccountType.NickName)
 
-    fun updateAccountFields(selectedAccount: Account?){
-        if (selectedAccount != null){
+    fun updateAccountFields(selectedAccount: Account?) {
+        if (selectedAccount != null) {
             id.value = selectedAccount.id
             title.value = selectedAccount.title
             account.value = selectedAccount.account
@@ -75,8 +80,8 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
 
-    fun handleDatabaseActions(action: Action){
-        when(action){
+    fun handleDatabaseActions(action: Action) {
+        when (action) {
             Action.ADD -> addAccount()
             Action.UPDATE -> updateAccount()
             Action.DELETE -> deleteAccount()
@@ -86,7 +91,7 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
         this.action.value = Action.NO_ACTION
     }
 
-    private fun addAccount(){
+    private fun addAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             val account = Account(
                 title = title.value,
@@ -97,9 +102,10 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
             )
             repository.addAccount(account)
         }
+        topAppBarState.value = TopAppBarState.DEFAULT
     }
 
-    private fun updateAccount(){
+    private fun updateAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             val account = Account(
                 id = id.value,
@@ -113,7 +119,7 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
         }
     }
 
-    private fun deleteAccount(){
+    private fun deleteAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             val account = Account(
                 id = id.value,
@@ -126,4 +132,23 @@ class SharedViewModel @Inject constructor(private val repository: AccountReposit
             repository.deleteAccount(account)
         }
     }
+
+    private val _searchedAccounts = MutableStateFlow<RequestState<List<Account>>>(RequestState.Idle)
+    val searchedAccounts: StateFlow<RequestState<List<Account>>> = _searchedAccounts
+
+    fun searchAccounts(searchQuery: String) {
+        _searchedAccounts.value = RequestState.Loading
+        viewModelScope.launch {
+            try {
+                repository.searchAccounts("%$searchQuery%").collect {
+                    _searchedAccounts.value = RequestState.Success(it)
+                }
+            } catch (e: Exception) {
+                _searchedAccounts.value = RequestState.Error(e)
+            }
+            topAppBarState.value = TopAppBarState.TRIGGERED
+        }
+    }
+
+    val topAppBarState = mutableStateOf(TopAppBarState.DEFAULT)
 }

@@ -23,13 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.ui.component.BaseTopAppBar
 import com.peanut.passwordmanager.ui.component.SearchAction
+import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.TopAppBarState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null) {
-    var topAppBarState by remember { mutableStateOf(TopAppBarState.DEFAULT) }
+fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewModel, scrollBehavior: TopAppBarScrollBehavior? = null) {
     var searchTextState by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     when (topAppBarState) {
@@ -37,15 +37,17 @@ fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null) {
             DefaultHomeTopAppBar(scrollBehavior = scrollBehavior, onSearchClick = {
                 coroutineScope.launch {
                     delay(200)
-                    topAppBarState = TopAppBarState.SEARCH
+                    sharedViewModel.topAppBarState.value = TopAppBarState.SEARCH
                 }
             })
         }
-        TopAppBarState.SEARCH -> {
-            SearchHomeTopAppBar(text = searchTextState, scrollBehavior = scrollBehavior, onSearchClick = {}, onCloseClick = {
+        else -> {
+            SearchHomeTopAppBar(text = searchTextState, scrollBehavior = scrollBehavior, onSearchClick = {
+                sharedViewModel.searchAccounts(it)
+            }, onCloseClick = {
                 coroutineScope.launch {
                     delay(200)
-                    topAppBarState = TopAppBarState.DEFAULT
+                    sharedViewModel.topAppBarState.value = TopAppBarState.DEFAULT
                 }
             }, onTextChange = { searchTextState = it })
         }

@@ -26,6 +26,7 @@
     <string name="action_delete">删除账号</string>
     <string name="action_undo">撤销操作</string>
     <string name="action_no_action">啥也不干</string>
-    <string name="action_delete_unfo">撤销</string>
+    <string name="action_delete_undo">撤销</string>
     <string name="action_ok">完成</string>
+    <string name="account_password_copy">已复制密码</string>
 </resources>

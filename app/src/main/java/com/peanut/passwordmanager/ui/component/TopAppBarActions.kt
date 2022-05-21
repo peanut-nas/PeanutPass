@@ -1,12 +1,16 @@
 package com.peanut.passwordmanager.ui.component
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.AdditionalFunctions.copy
@@ -56,7 +60,25 @@ fun UpdateAction(onUpdateClicked: (Action) -> Unit){
 @Composable
 fun CopyAction(text: String){
     val context = LocalContext.current
-    IconButton(onClick = { text.copy(context) }) {
-        Icon(imageVector = Icons.Rounded.Check, contentDescription = stringResource(id = R.string.delete_account))
+    val message = stringResource(id = R.string.account_password_copy)
+    IconButton(onClick = {
+        text.copy(context)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }) {
+        Icon(painter = painterResource(id = R.drawable.ic_round_content_copy_24), contentDescription = null)
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun ActionsPreview(){
+    Column {
+        SearchAction(onSearchClicked = {})
+        GoBackAction(onBackClicked = {})
+        CloseAction(onCloseClicked = {})
+        AddAction(onAddClicked = {})
+        DeleteAction(onDeleteClicked = {})
+        UpdateAction(onUpdateClicked = {})
+        CopyAction(text = "")
     }
 }

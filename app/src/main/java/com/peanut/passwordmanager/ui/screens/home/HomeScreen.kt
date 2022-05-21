@@ -14,11 +14,13 @@ import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.RequestState
+import com.peanut.passwordmanager.util.TopAppBarState
 
 @Composable
 fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     val action by sharedViewModel.action
+    val topAppBarState by sharedViewModel.topAppBarState
 
     //todo: bug: 实体键返回时没有清除Action
     val scaffoldState = rememberScaffoldState()
@@ -30,24 +32,28 @@ fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewM
         sharedViewModel.getAllAccounts()
     }
     val allAccounts by sharedViewModel.allAccounts.collectAsState()
+    val searchedAccounts by sharedViewModel.searchedAccounts.collectAsState()
     //todo: replace with material3 when passable
     androidx.compose.material.Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { HomeTopAppBar(scrollBehavior = scrollBehavior) },
+        topBar = { HomeTopAppBar(topAppBarState, sharedViewModel, scrollBehavior) },
         content = {
             Column(modifier = Modifier
                 .padding(it)
                 .fillMaxSize()) {
-                if (allAccounts is RequestState.Success) {
-                    if ((allAccounts as RequestState.Success<List<Account>>).data.isEmpty())
-                        AccountContentPlaceholder(stringResource(id = R.string.empty_content))
-                    else {
-                        TopAccountsContent(allAccounts = (allAccounts as RequestState.Success<List<Account>>).data, navigateToItemScreen = navigateToItemScreen)
-                        AllAccountsContent(allAccounts = (allAccounts as RequestState.Success<List<Account>>).data, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
+                if (topAppBarState == TopAppBarState.TRIGGERED) {
+                    if (searchedAccounts is RequestState.Success)
+                        HomeSearchContent(searchedAccounts = (searchedAccounts as RequestState.Success<List<Account>>).data,
+                            navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
+                }else{
+                    if (allAccounts is RequestState.Success) {
+                        HomeContent(allAccounts = (allAccounts as RequestState.Success<List<Account>>).data,
+                            topAccounts = (allAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen)
+                    }else if(allAccounts is RequestState.Error){
+                        AccountContentPlaceholder((allAccounts as RequestState.Error).error.localizedMessage?:"出现未知错误")
                     }
-                }else if(allAccounts is RequestState.Error){
-                    AccountContentPlaceholder((allAccounts as RequestState.Error).error.localizedMessage?:"出现未知错误")
                 }
+
             }
         },
         floatingActionButton = {
@@ -57,4 +63,23 @@ fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewM
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     )
+}
+
+@Composable
+fun HomeContent(allAccounts: List<Account>, topAccounts: List<Account>, sharedViewModel: SharedViewModel, navigateToItemScreen: (Int) -> Unit){
+    if (allAccounts.isEmpty())
+        AccountContentPlaceholder(stringResource(id = R.string.empty_content))
+    else {
+        TopAccountsContent(allAccounts = topAccounts, navigateToItemScreen = navigateToItemScreen)
+        AllAccountsContent(allAccounts = allAccounts, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
+    }
+}
+
+@Composable
+fun HomeSearchContent(searchedAccounts: List<Account>, sharedViewModel: SharedViewModel, navigateToItemScreen: (Int) -> Unit){
+    if (searchedAccounts.isEmpty())
+        AccountContentPlaceholder(stringResource(id = R.string.empty_content))
+    else {
+        AllAccountsContent(allAccounts = searchedAccounts, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
+    }
 }
