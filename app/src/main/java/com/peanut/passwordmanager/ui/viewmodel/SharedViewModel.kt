@@ -88,7 +88,6 @@ class SharedViewModel @Inject constructor(
             Action.UNDO -> addAccount()
             else -> {}
         }
-        this.action.value = Action.NO_ACTION
     }
 
     private fun addAccount() {

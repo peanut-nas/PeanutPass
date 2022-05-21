@@ -11,11 +11,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DisplaySnackBar(scaffoldState: ScaffoldState,
-                    handleDatabaseActions: () -> Unit,
+                    onComplete: (Action) -> Unit,
                     action: Action,
                     accountTitle: String,
                     onUndoClicked: (Action) -> Unit){
-    handleDatabaseActions()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val undo = stringResource(id = R.string.action_undo)
@@ -30,6 +29,7 @@ fun DisplaySnackBar(scaffoldState: ScaffoldState,
                 undoDeleteAccount(action, snackBarResult, onUndoClicked)
             }
         }
+        onComplete(Action.NO_ACTION)
     }
 }
 

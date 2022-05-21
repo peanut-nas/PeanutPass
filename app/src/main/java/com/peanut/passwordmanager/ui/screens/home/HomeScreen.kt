@@ -13,23 +13,23 @@ import androidx.compose.ui.res.stringResource
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
+import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.RequestState
 import com.peanut.passwordmanager.util.TopAppBarState
 
 @Composable
-fun HomeScreen(navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
+fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
-    val action by sharedViewModel.action
     val topAppBarState by sharedViewModel.topAppBarState
-
-    //todo: bug: 实体键返回时没有清除Action
     val scaffoldState = rememberScaffoldState()
-    DisplaySnackBar(scaffoldState = scaffoldState, handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action = action) }, action = action, accountTitle = sharedViewModel.title.value){
+    DisplaySnackBar(scaffoldState = scaffoldState, onComplete = { sharedViewModel.action.value = it }, action = action, accountTitle = sharedViewModel.title.value){
         sharedViewModel.action.value = it
     }
-
     LaunchedEffect(key1 = true) {
         sharedViewModel.getAllAccounts()
+    }
+    LaunchedEffect(key1 = action){
+        sharedViewModel.handleDatabaseActions(action = action)
     }
     val allAccounts by sharedViewModel.allAccounts.collectAsState()
     val searchedAccounts by sharedViewModel.searchedAccounts.collectAsState()
