@@ -22,7 +22,7 @@ class DataStoreRepository @Inject constructor(@ApplicationContext private val co
 
     private val dataStore = context.datastore
 
-    suspend fun store(key: Preferences.Key<Any>, value: Any){
+    suspend fun<T> store(key: Preferences.Key<T>, value: T){
         dataStore.edit {
             it[key] = value
         }

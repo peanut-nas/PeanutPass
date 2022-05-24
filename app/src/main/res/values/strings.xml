@@ -28,4 +28,7 @@
     <string name="account_type_nickname">NickName</string>
     <string name="account_type_reference">Reference</string>
     <string name="account_password_copy">Copied Password</string>
+    <string name="account_sort_LRU">Last used</string>
+    <string name="account_sort_LFU">Most used</string>
+    <string name="account_sort_LC">Last created</string>
 </resources>

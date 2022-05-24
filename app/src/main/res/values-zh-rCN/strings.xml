@@ -29,4 +29,7 @@
     <string name="action_delete_undo">撤销</string>
     <string name="action_ok">完成</string>
     <string name="account_password_copy">已复制密码</string>
+    <string name="account_sort_LRU">最近使用</string>
+    <string name="account_sort_LFU">经常使用</string>
+    <string name="account_sort_LC">最近添加</string>
 </resources>

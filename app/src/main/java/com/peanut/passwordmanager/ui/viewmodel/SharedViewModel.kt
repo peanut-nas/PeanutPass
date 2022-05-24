@@ -4,19 +4,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.data.repositories.AccountRepository
 import com.peanut.passwordmanager.data.repositories.DataStoreRepository
-import com.peanut.passwordmanager.util.AccountType
-import com.peanut.passwordmanager.util.Action
-import com.peanut.passwordmanager.util.RequestState
-import com.peanut.passwordmanager.util.TopAppBarState
+import com.peanut.passwordmanager.data.repositories.PreferenceKeys
+import com.peanut.passwordmanager.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -145,9 +141,21 @@ class SharedViewModel @Inject constructor(
             } catch (e: Exception) {
                 _searchedAccounts.value = RequestState.Error(e)
             }
-            topAppBarState.value = TopAppBarState.TRIGGERED
         }
+        topAppBarState.value = TopAppBarState.TRIGGERED
     }
 
     val topAppBarState = mutableStateOf(TopAppBarState.DEFAULT)
+
+    fun persistSortState(accountSortStrategy: AccountSortStrategy){
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.store(key = PreferenceKeys.HomeSortAllAccount, value = accountSortStrategy.name)
+        }
+    }
+
+    fun persistPasswordSettings(){
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.store(key = PreferenceKeys.PasswordGeneratorLength, value = 0)
+        }
+    }
 }

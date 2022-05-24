@@ -37,7 +37,7 @@ fun AccountIcon(accountName: String, icon: String = "", width: Dp = 46.dp, fontS
     val iconFolder = context.filesDir.absolutePath+"/"
     Surface(
         modifier = Modifier
-            .padding(12.dp)
+            .padding(start = 0.dp, top = 12.dp, bottom = 12.dp, end = 12.dp)
             .width(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)
     ) {
         if (icon.isNotEmpty()) {

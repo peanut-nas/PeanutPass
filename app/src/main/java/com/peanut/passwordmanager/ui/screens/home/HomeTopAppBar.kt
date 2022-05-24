@@ -43,6 +43,7 @@ fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewMod
         }
         else -> {
             SearchHomeTopAppBar(text = searchTextState, scrollBehavior = scrollBehavior, onSearchClick = {
+                println("onSearchClick")
                 sharedViewModel.searchAccounts(it)
             }, onCloseClick = {
                 coroutineScope.launch {
