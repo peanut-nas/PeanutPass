@@ -15,21 +15,21 @@ fun DisplaySnackBar(scaffoldState: ScaffoldState,
                     action: Action,
                     accountTitle: String,
                     onUndoClicked: (Action) -> Unit){
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val undo = stringResource(id = R.string.action_undo)
     val ok = stringResource(id = R.string.action_ok)
+    val actionName = stringResource(id = action.actionNameStringResourceId)
     LaunchedEffect(key1 = action){
         if (action != Action.NO_ACTION){
             scope.launch {
                 val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
-                    message = "${context.resources.getString(action.actionNameStringResourceId)}: $accountTitle",
+                    message = "$actionName: $accountTitle",
                     actionLabel = setActionLabel(action, undo, ok)
                 )
                 undoDeleteAccount(action, snackBarResult, onUndoClicked)
             }
+            onComplete(Action.NO_ACTION)
         }
-        onComplete(Action.NO_ACTION)
     }
 }
 

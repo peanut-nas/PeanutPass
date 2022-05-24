@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.activity.compose.BackHandler
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
@@ -34,7 +35,9 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val validateErrorText = stringResource(id = R.string.account_input_not_validate)
-    BackHandler(onBackPressed = { navigateToHomeScreen(Action.NO_ACTION) })
+    BackHandler{
+        navigateToHomeScreen(Action.NO_ACTION)
+    }
     BottomSheetPasswordGenerator(sheetState, coroutineScope, content = {
         Scaffold(
             topBar = { ItemTopAppBar(scrollBehavior = scrollBehavior, navigateToHomeScreen = { action: Action ->

@@ -9,13 +9,11 @@ class Screens(navController: NavHostController) {
 
     val home: (Action)->Unit = {
         navController.navigate("home/${it.name}"){
-            popUpTo(HOME_SCREEN)
+            popUpTo(HOME_SCREEN){ inclusive = true }
         }
     }
 
     val item: (Int)->Unit = {
-        navController.navigate("item/${it}"){
-            popUpTo(ITEM_SCREEN)
-        }
+        navController.navigate("item/${it}")
     }
 }

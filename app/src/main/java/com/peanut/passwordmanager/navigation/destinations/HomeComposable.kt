@@ -2,6 +2,9 @@ package com.peanut.passwordmanager.navigation.destinations
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -22,7 +25,7 @@ fun NavGraphBuilder.homeComposable(navigateToItemScreen: (Int) -> Unit, sharedVi
     ){ navBackStackEntry->
         val action: Action = navBackStackEntry.arguments?.getString("action").toAction()
         val databaseAction by sharedViewModel.action
-        LaunchedEffect(key1 = action){
+        LaunchedEffect(key1 = action) {
             sharedViewModel.action.value = action
         }
         HomeScreen(action = databaseAction, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
