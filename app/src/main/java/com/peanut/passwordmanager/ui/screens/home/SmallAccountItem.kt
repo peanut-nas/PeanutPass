@@ -1,5 +1,6 @@
 package com.peanut.passwordmanager.ui.screens.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ContentAlpha
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit, sharedViewModel: SharedViewModel) {
     Row(modifier = Modifier
         .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.background)
         .height(70.dp)
         .clickable { navigateToItemScreen(account.id) }) {
         AccountIcon(accountName = account.title, icon = account.icon)

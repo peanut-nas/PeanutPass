@@ -27,6 +27,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
         sharedViewModel.getAllAccounts()
         sharedViewModel.readSortState()
     }
+
     LaunchedEffect(key1 = action) {
         sharedViewModel.handleDatabaseActions(action = action)
     }
@@ -40,7 +41,8 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
     val lcAccounts by sharedViewModel.allAccounts.collectAsState()
     val searchedAccounts by sharedViewModel.searchedAccounts.collectAsState()
 
-    DisplaySnackBar(snackbarHostState = snackbarHostState, onComplete = { sharedViewModel.action.value = it }, action = action, accountTitle = sharedViewModel.title.value) {
+    DisplaySnackBar(snackbarHostState = snackbarHostState, onComplete = { sharedViewModel.action.value = it }, action = action,
+        accountTitle = sharedViewModel.title.value) {
         sharedViewModel.action.value = it
     }
 
