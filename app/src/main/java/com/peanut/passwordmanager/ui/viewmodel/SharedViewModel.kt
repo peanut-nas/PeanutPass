@@ -11,8 +11,7 @@ import com.peanut.passwordmanager.data.repositories.PreferenceKeys
 import com.peanut.passwordmanager.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -156,6 +155,36 @@ class SharedViewModel @Inject constructor(
     fun persistPasswordSettings(){
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.store(key = PreferenceKeys.PasswordGeneratorLength, value = 0)
+        }
+    }
+
+    private val _sortState = MutableStateFlow<RequestState<AccountSortStrategy>>(RequestState.Idle)
+    val sortState: StateFlow<RequestState<AccountSortStrategy>> = _sortState
+
+    val lastRecentUsedAccounts: StateFlow<List<Account>> = repository.sortByLastRecentUsed.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
+
+    val lastFrequentUsedAccounts: StateFlow<List<Account>> = repository.sortByLastFrequentUsed.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
+
+    fun readSortState(){
+        _sortState.value = RequestState.Loading
+        viewModelScope.launch {
+            try {
+                dataStoreRepository.read(PreferenceKeys.HomeSortAllAccount).map {
+                    AccountSortStrategy.valueOf(it?:AccountSortStrategy.LastCreated.name)
+                }.collect{
+                    _sortState.value = RequestState.Success(it)
+                }
+            } catch (e: Exception) {
+                _sortState.value = RequestState.Error(e)
+            }
         }
     }
 }

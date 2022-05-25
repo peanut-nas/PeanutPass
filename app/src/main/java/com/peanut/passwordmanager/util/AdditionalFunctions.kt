@@ -5,6 +5,8 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.net.Uri
 import androidx.core.net.toFile
+import com.peanut.passwordmanager.data.models.Account
+import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -46,7 +48,7 @@ object AdditionalFunctions {
         }
     }
 
-    fun copyFileUseStream(
+    private fun copyFileUseStream(
         fileInputStream: InputStream,
         fileOutputStream: OutputStream,
         close: Boolean = true
@@ -65,5 +67,35 @@ object AdditionalFunctions {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun Account.toJsonString(): String{
+        val jsonObject = JSONObject().apply {
+            this.put("id", this@toJsonString.id)
+            this.put("title", this@toJsonString.title)
+            this.put("icon", this@toJsonString.icon)
+            this.put("account", this@toJsonString.account)
+            this.put("password", this@toJsonString.password)
+            this.put("accountType", this@toJsonString.accountType.name)
+            this.put("accessTime", this@toJsonString.accessTime)
+            this.put("createTime", this@toJsonString.createTime)
+            this.put("accessTimes", this@toJsonString.accessTimes)
+        }
+        return jsonObject.toString(4)
+    }
+
+    fun String.buildToAccount(): Account{
+        val jsonObject = JSONObject(this)
+        return Account(
+            id = jsonObject.getInt("id"),
+            title = jsonObject.getString("title"),
+            icon = jsonObject.getString("icon"),
+            account = jsonObject.getString("account"),
+            password = jsonObject.getString("password"),
+            accountType = AccountType.valueOf(jsonObject.getString("accountType")),
+            accessTime = jsonObject.getLong("accessTime"),
+            createTime = jsonObject.getLong("createTime"),
+            accessTimes = jsonObject.getInt("accessTimes"),
+        )
     }
 }

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.peanut.passwordmanager.util.AccountType
 
 @Composable
-fun SelectableTitle(title: String, isSelectable: Boolean, items: Array<String>, onSelected: (String) -> Unit){
+fun<T> SelectableTitle(title: String, isSelectable: Boolean, items: Array<T>, performText: (T) -> String, onSelected: (T) -> Unit){
     var expanded by remember { mutableStateOf(false) }
     val angle: Float by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
 
@@ -30,7 +30,7 @@ fun SelectableTitle(title: String, isSelectable: Boolean, items: Array<String>, 
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 for (item in items) {
-                    DropdownMenuItem(text = { Text(text = item) }, onClick = {
+                    DropdownMenuItem(text = { Text(text = performText(item)) }, onClick = {
                         expanded = false
                         onSelected(item)
                     })
@@ -44,8 +44,8 @@ fun SelectableTitle(title: String, isSelectable: Boolean, items: Array<String>, 
 @Preview(showBackground = true)
 fun SelectableTitlePreview(){
     Column {
-        SelectableTitle(title = "Last used", isSelectable = false, items = emptyArray(), onSelected = {})
-        SelectableTitle(title = "Most used", isSelectable = true, items = arrayOf("Most used", "Last used", "Last create"), onSelected = {})
+        SelectableTitle(title = "Last used", isSelectable = false, items = emptyArray<String>(), onSelected = {}, performText = {it})
+        SelectableTitle(title = "Most used", isSelectable = true, items = arrayOf("Most used", "Last used", "Last create"), onSelected = {}, performText = {it})
     }
 
 }
