@@ -1,9 +1,13 @@
 package com.peanut.passwordmanager.ui.screens.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -18,12 +22,13 @@ import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.RequestState
 import com.peanut.passwordmanager.util.TopAppBarState
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
     val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
     val topAppBarState by sharedViewModel.topAppBarState
-    val scaffoldState = rememberScaffoldState()
-    DisplaySnackBar(scaffoldState = scaffoldState, onComplete = { sharedViewModel.action.value = it }, action = action, accountTitle = sharedViewModel.title.value) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    DisplaySnackBar(snackbarHostState = snackbarHostState, onComplete = { sharedViewModel.action.value = it }, action = action, accountTitle = sharedViewModel.title.value) {
         sharedViewModel.action.value = it
     }
     LaunchedEffect(key1 = true) {
@@ -35,8 +40,8 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
     val allAccounts by sharedViewModel.allAccounts.collectAsState()
     val searchedAccounts by sharedViewModel.searchedAccounts.collectAsState()
     //todo: replace with material3 when passable
-    androidx.compose.material.Scaffold(
-        scaffoldState = scaffoldState,
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = { HomeTopAppBar(topAppBarState, sharedViewModel, scrollBehavior) },
         content = {
             Column(
@@ -61,7 +66,6 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
                         AccountContentPlaceholder((allAccounts as RequestState.Error).error.localizedMessage ?: "出现未知错误")
                     }
                 }
-
             }
         },
         floatingActionButton = {

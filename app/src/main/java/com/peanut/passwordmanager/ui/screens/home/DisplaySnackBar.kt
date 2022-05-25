@@ -1,16 +1,17 @@
 package com.peanut.passwordmanager.ui.screens.home
 
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarResult
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.util.Action
 import kotlinx.coroutines.launch
 
 @Composable
-fun DisplaySnackBar(scaffoldState: ScaffoldState,
+fun DisplaySnackBar(snackbarHostState: SnackbarHostState,
                     onComplete: (Action) -> Unit,
                     action: Action,
                     accountTitle: String,
@@ -22,7 +23,7 @@ fun DisplaySnackBar(scaffoldState: ScaffoldState,
     LaunchedEffect(key1 = action){
         if (action != Action.NO_ACTION){
             scope.launch {
-                val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
+                val snackBarResult = snackbarHostState.showSnackbar(
                     message = "$actionName: $accountTitle",
                     actionLabel = setActionLabel(action, undo, ok)
                 )

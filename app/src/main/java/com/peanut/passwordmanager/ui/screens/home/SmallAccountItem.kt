@@ -29,9 +29,7 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
         Column(verticalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxHeight()) {
             Text(
                 text = account.title,
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .clickable { },
+                modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold, fontSize = 20.sp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
