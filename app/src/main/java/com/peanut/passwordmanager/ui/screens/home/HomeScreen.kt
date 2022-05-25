@@ -77,18 +77,22 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
                             }
                         }
                         (sortState as RequestState.Success<AccountSortStrategy>).data == AccountSortStrategy.LastRecentUsed -> {
-                            HomeContent(
-                                allAccounts = lruAccounts,
-                                allAccountSortStrategy = AccountSortStrategy.LastRecentUsed,
-                                topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
-                            )
+                            if (lcAccounts is RequestState.Success) {
+                                HomeContent(
+                                    allAccounts = lruAccounts,
+                                    allAccountSortStrategy = AccountSortStrategy.LastRecentUsed,
+                                    topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
+                                )
+                            }
                         }
                         (sortState as RequestState.Success<AccountSortStrategy>).data == AccountSortStrategy.LastFrequentUsed -> {
-                            HomeContent(
-                                allAccounts = lfuAccounts,
-                                allAccountSortStrategy = AccountSortStrategy.LastFrequentUsed,
-                                topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
-                            )
+                            if (lcAccounts is RequestState.Success) {
+                                HomeContent(
+                                    allAccounts = lfuAccounts,
+                                    allAccountSortStrategy = AccountSortStrategy.LastFrequentUsed,
+                                    topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
+                                )
+                            }
                         }
                     }
                 }
