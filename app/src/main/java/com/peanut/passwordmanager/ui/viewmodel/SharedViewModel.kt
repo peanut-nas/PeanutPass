@@ -11,6 +11,7 @@ import com.peanut.passwordmanager.data.repositories.PreferenceKeys
 import com.peanut.passwordmanager.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -185,6 +186,13 @@ class SharedViewModel @Inject constructor(
             } catch (e: Exception) {
                 _sortState.value = RequestState.Error(e)
             }
+        }
+    }
+
+    fun increaseAccountAccessTimes(account: Account, delay: Long){
+        viewModelScope.launch {
+            delay(delay)
+            repository.increaseAccessTimes(account)
         }
     }
 }

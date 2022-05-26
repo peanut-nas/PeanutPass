@@ -33,4 +33,10 @@ class AccountRepository @Inject constructor(private val accountDao: AccountDao) 
         return accountDao.searchAccounts(searchQuery = searchQuery)
     }
 
+    suspend fun increaseAccessTimes(account: Account){
+        account.accessTimes += 1
+        account.accessTime = System.currentTimeMillis()
+        updateAccount(account)
+    }
+
 }

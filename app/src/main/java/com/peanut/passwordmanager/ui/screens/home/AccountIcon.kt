@@ -5,10 +5,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +29,7 @@ import java.io.File
 
 
 @Composable
-fun AccountIcon(accountName: String, icon: String = "", width: Dp = 46.dp, fontSize: TextUnit = 24.sp) {
+fun AccountIcon(accountName: String, icon: String = "", width: Dp = 46.dp, fontSize: TextUnit = 24.sp, iconPaddingValues: PaddingValues = PaddingValues(0.dp)) {
     val context = LocalContext.current
     val iconFolder = context.filesDir.absolutePath+"/"
     Surface(
@@ -50,7 +47,7 @@ fun AccountIcon(accountName: String, icon: String = "", width: Dp = 46.dp, fontS
                 bitmap.value = ImageDecoder.decodeBitmap(source)
             }
             bitmap.value?.let {
-                Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = Modifier.padding(10.dp))
+                Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = Modifier.padding(iconPaddingValues))
             }
         }
         else if (accountName.isNotEmpty()) {

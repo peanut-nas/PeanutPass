@@ -53,7 +53,9 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
             )
         }
         Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxSize().padding(end = 8.dp)) {
-            CopyAction(text = account.password)
+            CopyAction(text = account.password, onCopyTriggered = {
+                sharedViewModel.increaseAccountAccessTimes(account, 300)
+            })
         }
     }
 }

@@ -58,12 +58,13 @@ fun UpdateAction(onUpdateClicked: (Action) -> Unit){
 }
 
 @Composable
-fun CopyAction(text: String){
+fun CopyAction(text: String, onCopyTriggered: () -> Unit){
     val context = LocalContext.current
     val message = stringResource(id = R.string.account_password_copy)
     IconButton(onClick = {
         text.copy(context)
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        onCopyTriggered()
     }) {
         Icon(painter = painterResource(id = R.drawable.ic_round_content_copy_24), contentDescription = null)
     }
@@ -79,6 +80,6 @@ fun ActionsPreview(){
         AddAction(onAddClicked = {})
         DeleteAction(onDeleteClicked = {})
         UpdateAction(onUpdateClicked = {})
-        CopyAction(text = "")
+        CopyAction(text = "") {}
     }
 }

@@ -8,10 +8,7 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.icons.Icons
@@ -35,7 +32,7 @@ import com.peanut.passwordmanager.ui.theme.AccountIconBackground
 import java.io.File
 
 @Composable
-fun SelectableLogoIcon(accountName: String? = null, icon: String? = null, onIconSelected: (Uri?) -> Unit){
+fun SelectableLogoIcon(accountName: String? = null, icon: String? = null, iconPaddingValues: PaddingValues = PaddingValues(0.dp), onIconSelected: (Uri?) -> Unit){
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         onIconSelected(it)
     }
@@ -58,7 +55,7 @@ fun SelectableLogoIcon(accountName: String? = null, icon: String? = null, onIcon
                 bitmap.value = ImageDecoder.decodeBitmap(source)
             }
             bitmap.value?.let {
-                Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = Modifier.padding(10.dp))
+                Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = Modifier.padding(iconPaddingValues))
             }
         }else if (accountName != null && accountName.isNotEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
