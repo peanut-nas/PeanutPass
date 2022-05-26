@@ -70,7 +70,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
                                 HomeContent(
                                     allAccounts = (lcAccounts as RequestState.Success<List<Account>>).data,
                                     allAccountSortStrategy = AccountSortStrategy.LastCreated,
-                                    topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
+                                    topAccounts = lruAccounts, sharedViewModel, navigateToItemScreen = navigateToItemScreen
                                 )
                             } else if (lcAccounts is RequestState.Error) {
                                 AccountContentPlaceholder("读取账户失败，" + ((lcAccounts as RequestState.Error).error.localizedMessage ?: "未知错误"))
@@ -81,7 +81,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
                                 HomeContent(
                                     allAccounts = lruAccounts,
                                     allAccountSortStrategy = AccountSortStrategy.LastRecentUsed,
-                                    topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
+                                    topAccounts = lruAccounts, sharedViewModel, navigateToItemScreen = navigateToItemScreen
                                 )
                             }
                         }
@@ -90,7 +90,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
                                 HomeContent(
                                     allAccounts = lfuAccounts,
                                     allAccountSortStrategy = AccountSortStrategy.LastFrequentUsed,
-                                    topAccounts = (lcAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
+                                    topAccounts = lruAccounts, sharedViewModel, navigateToItemScreen = navigateToItemScreen
                                 )
                             }
                         }
