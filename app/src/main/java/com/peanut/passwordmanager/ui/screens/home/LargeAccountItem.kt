@@ -13,11 +13,8 @@ import com.peanut.passwordmanager.util.AccountType
 
 @Composable
 fun LargeAccountItem(account: Account, navigateToItemScreen: (accountId: Int) -> Unit) {
-    Box(modifier = Modifier
-        .height(94.dp)
-        .clickable { navigateToItemScreen(account.id) }) {
-        AccountIcon(accountName = account.title, icon = account.icon, width = 70.dp, fontSize = 36.sp)
-    }
+   AccountIcon(modifier = Modifier.clickable { navigateToItemScreen(account.id) },
+       accountName = account.title, icon = account.icon, width = 60.dp, fontSize = 32.sp)
 }
 
 @Composable

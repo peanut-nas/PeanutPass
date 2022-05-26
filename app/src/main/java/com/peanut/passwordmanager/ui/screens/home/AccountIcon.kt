@@ -5,6 +5,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Icon
@@ -29,16 +30,19 @@ import java.io.File
 
 
 @Composable
-fun AccountIcon(accountName: String, icon: String = "", width: Dp = 46.dp, fontSize: TextUnit = 24.sp, iconPaddingValues: PaddingValues = PaddingValues(0.dp)) {
+fun AccountIcon(
+    modifier: Modifier = Modifier, accountName: String, icon: String = "", width: Dp = 46.dp,
+    fontSize: TextUnit = 24.sp, iconPaddingValues: PaddingValues = PaddingValues(0.dp)
+) {
     val context = LocalContext.current
-    val iconFolder = context.filesDir.absolutePath+"/"
+    val iconFolder = context.filesDir.absolutePath + "/"
     Surface(
         modifier = Modifier
             .padding(start = 0.dp, top = 12.dp, bottom = 12.dp, end = 12.dp)
-            .width(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)
+            .size(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)
     ) {
         if (icon.isNotEmpty()) {
-            val iconUri = Uri.fromFile(File(iconFolder+icon))
+            val iconUri = Uri.fromFile(File(iconFolder + icon))
             val bitmap = remember { mutableStateOf<Bitmap?>(null) }
             if (Build.VERSION.SDK_INT < 28) {
                 bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, iconUri)
@@ -47,10 +51,9 @@ fun AccountIcon(accountName: String, icon: String = "", width: Dp = 46.dp, fontS
                 bitmap.value = ImageDecoder.decodeBitmap(source)
             }
             bitmap.value?.let {
-                Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = Modifier.padding(iconPaddingValues))
+                Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = modifier.padding(iconPaddingValues))
             }
-        }
-        else if (accountName.isNotEmpty()) {
+        } else if (accountName.isNotEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = accountName[0].toString(), fontSize = fontSize)
             }
