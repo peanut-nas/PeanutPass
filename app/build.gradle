@@ -12,8 +12,8 @@ android {
         applicationId "com.peanut.passwordmanager"
         minSdk 23
         targetSdk 32
-        versionCode 35
-        versionName "0.3.5-preview"
+        versionCode 36
+        versionName "0.3.6-preview"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
