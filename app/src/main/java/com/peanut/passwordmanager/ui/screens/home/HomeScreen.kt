@@ -1,6 +1,5 @@
 package com.peanut.passwordmanager.ui.screens.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -115,7 +114,7 @@ fun HomeContent(allAccounts: List<Account>, allAccountSortStrategy: AccountSortS
     else {
         SelectableTitle(title = stringResource(id = AccountSortStrategy.LastRecentUsed.sortStrategyStringResourceId),
             isSelectable = false, items = emptyArray<String>(), onSelected = {}, performText = { it })
-        TopAccountsContent(allAccounts = topAccounts, navigateToItemScreen = navigateToItemScreen)
+        TopAccountsContent(allAccounts = topAccounts)
         val context = LocalContext.current
         SelectableTitle(
             title = stringResource(id = allAccountSortStrategy.sortStrategyStringResourceId), isSelectable = true,
