@@ -37,8 +37,8 @@ fun SplashScreen(navigateToHomeScreen: () -> Unit) {
 @Composable
 fun getLogo(): Int {
     return if (isSystemInDarkTheme())
-        R.drawable.ic_logo_light
-    else R.drawable.ic_logo_light
+        R.drawable.ic_splash_logo_dark
+    else R.drawable.ic_splash_logo_light
 }
 
 @Composable
