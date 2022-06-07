@@ -23,6 +23,13 @@ fun SearchAction(onSearchClicked: () -> Unit) {
 }
 
 @Composable
+fun ServerAction(onServerClicked: () -> Unit) {
+    IconButton(onClick = { onServerClicked() }) {
+        Icon(imageVector = Icons.Rounded.Share, contentDescription = null)
+    }
+}
+
+@Composable
 fun GoBackAction(onBackClicked: (Action) -> Unit){
     IconButton(onClick = { onBackClicked(Action.NO_ACTION) }) {
         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.go_back))

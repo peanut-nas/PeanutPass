@@ -10,4 +10,6 @@ object Constants {
     const val ITEM_SCREEN = "item/{itemId}"
 
     const val PREFERENCE_NAME = "account_preference"
+
+    const val NETWORK_PORT = 4321
 }

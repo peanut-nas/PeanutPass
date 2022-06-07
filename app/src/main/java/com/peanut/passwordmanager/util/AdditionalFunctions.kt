@@ -6,11 +6,14 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.net.toFile
 import com.peanut.passwordmanager.data.models.Account
+import com.peanut.passwordmanager.server.SharedData
 import org.json.JSONObject
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.net.InetSocketAddress
+import java.net.Socket
 
 object AdditionalFunctions {
 
@@ -18,6 +21,18 @@ object AdditionalFunctions {
         val clipboard: ClipboardManager? = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
         val clip = ClipData.newPlainText("com.peanut.pm", this)
         clipboard?.setPrimaryClip(clip)
+        SharedData.copiedData = this
+    }
+
+    fun isPortAvailable(port: Int): Boolean {
+        return try {
+            val s = Socket()
+            s.bind(InetSocketAddress("127.0.0.1", port))
+            s.close()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun copyFile(source: Uri, destination: String, context: Context) {
