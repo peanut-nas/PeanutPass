@@ -1,11 +1,15 @@
 package com.peanut.passwordmanager.ui.viewmodel
 
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.peanut.passwordmanager.data.BackupDatabase
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.data.repositories.AccountRepository
+import com.peanut.passwordmanager.data.repositories.BackupRepository
 import com.peanut.passwordmanager.data.repositories.DataStoreRepository
 import com.peanut.passwordmanager.data.repositories.PreferenceKeys
 import com.peanut.passwordmanager.util.*
@@ -194,5 +198,23 @@ class SharedViewModel @Inject constructor(
             delay(delay)
             repository.increaseAccessTimes(account)
         }
+    }
+
+    suspend fun backup(context: Context){
+        val backup = Room.databaseBuilder(
+            context,
+            BackupDatabase::class.java, Constants.DATABASE_NAME_BACKUP
+        ).build()
+        val r = BackupRepository(backup.backupDao(), backup)
+        r.deleteTable()
+        when(val it = allAccounts.value){
+            is RequestState.Success -> {
+                it.data.forEach {
+                    r.addAccount(it, context)
+                }
+            }
+            else -> {}
+        }
+        backup.close()
     }
 }

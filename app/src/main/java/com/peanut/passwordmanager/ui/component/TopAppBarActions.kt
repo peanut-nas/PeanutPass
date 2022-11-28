@@ -30,6 +30,13 @@ fun ServerAction(onServerClicked: () -> Unit) {
 }
 
 @Composable
+fun BackupAction(onBackupClicked: () -> Unit) {
+    IconButton(onClick = { onBackupClicked() }) {
+        Icon(imageVector = Icons.Rounded.Backup, contentDescription = null)
+    }
+}
+
+@Composable
 fun GoBackAction(onBackClicked: (Action) -> Unit){
     IconButton(onClick = { onBackClicked(Action.NO_ACTION) }) {
         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.go_back))
@@ -73,7 +80,7 @@ fun CopyAction(text: String, onCopyTriggered: () -> Unit){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         onCopyTriggered()
     }) {
-        Icon(painter = painterResource(id = R.drawable.ic_round_content_copy_24), contentDescription = null)
+        Icon(imageVector = Icons.Rounded.ContentCopy, contentDescription = null)
     }
 }
 
@@ -82,6 +89,7 @@ fun CopyAction(text: String, onCopyTriggered: () -> Unit){
 fun ActionsPreview(){
     Column {
         SearchAction(onSearchClicked = {})
+        BackupAction {}
         GoBackAction(onBackClicked = {})
         CloseAction(onCloseClicked = {})
         AddAction(onAddClicked = {})

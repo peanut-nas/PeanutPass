@@ -3,6 +3,7 @@ package com.peanut.passwordmanager.di
 import android.content.Context
 import androidx.room.Room
 import com.peanut.passwordmanager.data.AccountDatabase
+import com.peanut.passwordmanager.data.BackupDatabase
 import com.peanut.passwordmanager.util.Constants
 import dagger.Module
 import dagger.Provides

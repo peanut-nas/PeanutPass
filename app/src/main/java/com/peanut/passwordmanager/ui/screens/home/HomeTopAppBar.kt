@@ -25,6 +25,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.server.HttpService
+import com.peanut.passwordmanager.ui.component.BackupAction
 import com.peanut.passwordmanager.ui.component.BaseTopAppBar
 import com.peanut.passwordmanager.ui.component.SearchAction
 import com.peanut.passwordmanager.ui.component.ServerAction
@@ -32,8 +33,10 @@ import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.AdditionalFunctions.isPortAvailable
 import com.peanut.passwordmanager.util.Constants
 import com.peanut.passwordmanager.util.TopAppBarState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewModel, scrollBehavior: TopAppBarScrollBehavior? = null) {
@@ -54,6 +57,14 @@ fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewMod
                     Toast.makeText(context, "开启局域网共享", Toast.LENGTH_SHORT).show()
                     context.startService(Intent(context, HttpService::class.java))
                 }
+            }, onBackUpClicked = {
+                //save to new room database
+                coroutineScope.launch {
+                    withContext(Dispatchers.IO){
+                        sharedViewModel.backup(context)
+                    }
+                    Toast.makeText(context, "备份完成", Toast.LENGTH_SHORT).show()
+                }
             })
         }
         else -> {
@@ -71,7 +82,11 @@ fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewMod
 }
 
 @Composable
-fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null, onSearchClick: () -> Unit, onServerClicked: () -> Unit) {
+fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null,
+                         onSearchClick: () -> Unit,
+                         onServerClicked: () -> Unit,
+                         onBackUpClicked: () -> Unit
+) {
     BaseTopAppBar(
         title = {
             Text(
@@ -89,6 +104,7 @@ fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null, onSear
         actions = {
             SearchAction{ onSearchClick() }
             ServerAction { onServerClicked() }
+            BackupAction { onBackUpClicked() }
         },
         scrollBehavior = scrollBehavior
     )
@@ -154,7 +170,7 @@ fun SearchHomeTopAppBar(
 @Composable
 @Preview
 fun DefaultHomeTopAppBarPreview() {
-    DefaultHomeTopAppBar(onSearchClick = {}, onServerClicked = {})
+    DefaultHomeTopAppBar(onSearchClick = {}, onServerClicked = {}, onBackUpClicked = {})
 }
 
 @Composable
