@@ -13,4 +13,4 @@
 - Material3
 
 # 备份
-点击备份按钮后，账号密码都是复制一份以明文放在/data/data/pkg/database/password_manager_backup.db里面，需要root自己移动出来备份（我有root就懒得写保存在Downloads里面了,P.S.Android 12之后保存数据越来越麻烦懒得研究，你有能力可以pr）
+点击备份按钮后，账号密码都是复制一份以明文放在`Download/Password Manager/`中
