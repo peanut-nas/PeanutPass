@@ -35,7 +35,7 @@ fun PasswordManagerTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @C
     )
 }
 
-private tailrec fun Context.findActivity(): Activity =
+tailrec fun Context.findActivity(): Activity =
     when (this) {
         is Activity -> this
         is ContextWrapper -> this.baseContext.findActivity()

@@ -2,7 +2,7 @@ package com.peanut.passwordmanager.ui.screens.home
 
 import android.content.Intent
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ContentAlpha
@@ -29,14 +29,17 @@ import com.peanut.passwordmanager.ui.component.BackupAction
 import com.peanut.passwordmanager.ui.component.BaseTopAppBar
 import com.peanut.passwordmanager.ui.component.SearchAction
 import com.peanut.passwordmanager.ui.component.ServerAction
+import com.peanut.passwordmanager.ui.theme.findActivity
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.AdditionalFunctions.isPortAvailable
 import com.peanut.passwordmanager.util.Constants
 import com.peanut.passwordmanager.util.TopAppBarState
+import com.peanut.sdk.petlin.FileCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileInputStream
 
 @Composable
 fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewModel, scrollBehavior: TopAppBarScrollBehavior? = null) {
@@ -53,15 +56,27 @@ fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewMod
             }, onServerClicked = {
                 if (!isPortAvailable(Constants.NETWORK_PORT)) {
                     Toast.makeText(context, "端口${Constants.NETWORK_PORT}被占用", Toast.LENGTH_SHORT).show()
-                }else {
+                } else {
                     Toast.makeText(context, "开启局域网共享", Toast.LENGTH_SHORT).show()
                     context.startService(Intent(context, HttpService::class.java))
                 }
             }, onBackUpClicked = {
                 //save to new room database
                 coroutineScope.launch {
-                    withContext(Dispatchers.IO){
+                    withContext(Dispatchers.IO) {
                         sharedViewModel.backup(context)
+                    }
+                    FileCompat.saveFileToPublicDownload(
+                        context = context.findActivity(),
+                        dir = "Password Manager",
+                        fileName = "${context.packageName}.backup-${System.currentTimeMillis()}.db"
+                    ) {
+                        withContext(Dispatchers.IO) {
+                            FileCompat.copyFileUseStream(
+                                fileInputStream = FileInputStream(context.getDatabasePath(Constants.DATABASE_NAME_BACKUP)),
+                                fileOutputStream = it
+                            )
+                        }
                     }
                     Toast.makeText(context, "备份完成", Toast.LENGTH_SHORT).show()
                 }
@@ -82,10 +97,11 @@ fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewMod
 }
 
 @Composable
-fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null,
-                         onSearchClick: () -> Unit,
-                         onServerClicked: () -> Unit,
-                         onBackUpClicked: () -> Unit
+fun DefaultHomeTopAppBar(
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    onSearchClick: () -> Unit,
+    onServerClicked: () -> Unit,
+    onBackUpClicked: () -> Unit
 ) {
     BaseTopAppBar(
         title = {
@@ -102,7 +118,7 @@ fun DefaultHomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null,
             )
         },
         actions = {
-            SearchAction{ onSearchClick() }
+            SearchAction { onSearchClick() }
             ServerAction { onServerClicked() }
             BackupAction { onBackUpClicked() }
         },
@@ -163,8 +179,6 @@ fun SearchHomeTopAppBar(
         scrollBehavior = scrollBehavior
     )
 }
-
-
 
 
 @Composable
