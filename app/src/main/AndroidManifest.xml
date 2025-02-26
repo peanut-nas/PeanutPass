@@ -4,7 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -22,6 +21,15 @@
             </intent-filter>
         </activity>
         <service android:name=".server.HttpService"/>
+        <service
+            android:name=".service.MyAutofillService"
+            android:exported="true"
+            android:label="Peanut Pass"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package com.peanut.passwordmanager.ui.viewmodel
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -197,6 +198,14 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             delay(delay)
             repository.increaseAccessTimes(account)
+        }
+    }
+
+    suspend fun shouldShow(key: String, consume: () -> Boolean) {
+        val stored = dataStoreRepository.read(booleanPreferencesKey(key)).firstOrNull()?:false
+        if (stored) return
+        if (consume()) {
+            dataStoreRepository.store(booleanPreferencesKey(key), true)
         }
     }
 
