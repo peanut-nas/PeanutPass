@@ -14,6 +14,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.unit.dp
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
@@ -35,6 +39,15 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val validateErrorText = stringResource(id = R.string.account_input_not_validate)
+    val blurRadius = remember { Animatable(0f) }
+
+    LaunchedEffect(sheetState.targetValue) {
+        val targetBlur = if (sheetState.targetValue == ModalBottomSheetValue.Expanded) 16f else 0f
+        blurRadius.animateTo(
+            targetValue = targetBlur,
+            animationSpec = tween(durationMillis = 300)
+        )
+    }
     BackHandler{
         navigateToHomeScreen(Action.NO_ACTION)
     }
@@ -67,7 +80,7 @@ fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?
                     ){ coroutineScope.launch { sheetState.show() } }
                 }
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).blur(blurRadius.value.dp),
         )
     }) { generated ->
         if (sheetState.isVisible)
