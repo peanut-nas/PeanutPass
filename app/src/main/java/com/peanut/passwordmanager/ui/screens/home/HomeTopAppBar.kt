@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.FileInputStream
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewModel, scrollBehavior: TopAppBarScrollBehavior? = null) {
     var searchTextState by remember { mutableStateOf("") }
@@ -96,6 +97,7 @@ fun HomeTopAppBar(topAppBarState: TopAppBarState, sharedViewModel: SharedViewMod
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DefaultHomeTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
@@ -126,6 +128,7 @@ fun DefaultHomeTopAppBar(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchHomeTopAppBar(
     text: String,
@@ -145,8 +148,9 @@ fun SearchHomeTopAppBar(
                 keyboardActions = KeyboardActions(onSearch = {
                     onSearchClick(text)
                 }),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
                     cursorColor = MaterialTheme.colorScheme.onSurface,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -181,12 +185,14 @@ fun SearchHomeTopAppBar(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun DefaultHomeTopAppBarPreview() {
     DefaultHomeTopAppBar(onSearchClick = {}, onServerClicked = {}, onBackUpClicked = {})
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun SearchHomeTopAppBarPreview() {

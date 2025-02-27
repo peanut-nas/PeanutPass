@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextCheckbox(
     checked: Boolean,
@@ -20,7 +19,7 @@ fun TextCheckbox(
     colors: CheckboxColors = CheckboxDefaults.colors()
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Checkbox(checked, onCheckedChange, modifier, enabled, interactionSource, colors)
+        Checkbox(checked, onCheckedChange, modifier, enabled, colors, interactionSource)
         Text(text = text)
     }
 }

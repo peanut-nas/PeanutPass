@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import com.peanut.passwordmanager.R
@@ -25,10 +26,10 @@ import com.peanut.passwordmanager.util.AccountType
 import com.peanut.passwordmanager.util.Action
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ItemScreen(navigateToHomeScreen: (Action) -> Unit, selectedAccount: Account?, sharedViewModel: SharedViewModel){
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val title by sharedViewModel.title
     val account by sharedViewModel.account
     val icon by sharedViewModel.icon

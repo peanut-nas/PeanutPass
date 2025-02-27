@@ -29,8 +29,9 @@ fun KeyAndInputValue(key: String, value: String, onValueChange: (String) -> Unit
                 TextField(
                     value = value, onValueChange = { onValueChange(it) },
                     readOnly = readOnly,
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
                         cursorColor = MaterialTheme.colorScheme.onSurface,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,

@@ -1,5 +1,6 @@
 package com.peanut.passwordmanager.ui.screens.item
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import com.peanut.passwordmanager.ui.component.BaseTopAppBar
 import com.peanut.passwordmanager.ui.component.GoBackAction
 import com.peanut.passwordmanager.util.Action
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTopAppBar(scrollBehavior: TopAppBarScrollBehavior? = null, navigateToHomeScreen: (Action) -> Unit){
     BaseTopAppBar(

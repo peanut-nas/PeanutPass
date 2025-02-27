@@ -3,6 +3,7 @@ package com.peanut.passwordmanager.ui.screens.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -21,6 +22,7 @@ import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.RequestState
 import com.peanut.passwordmanager.util.TopAppBarState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
     LaunchedEffect(key1 = true) {
@@ -32,7 +34,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
         sharedViewModel.handleDatabaseActions(action = action)
     }
 
-    val scrollBehavior = remember { TopAppBarDefaults.pinnedScrollBehavior() }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topAppBarState by sharedViewModel.topAppBarState
     val snackbarHostState = remember { SnackbarHostState() }
     val sortState by sharedViewModel.sortState.collectAsState()
