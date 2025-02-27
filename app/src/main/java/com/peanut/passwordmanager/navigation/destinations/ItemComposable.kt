@@ -27,9 +27,7 @@ fun NavGraphBuilder.itemComposable(navigateToHomeScreen: (Action) -> Unit, share
         val selectedAccount by sharedViewModel.selectedAccount.collectAsState()
 
         LaunchedEffect(key1 = selectedAccount){
-            //删除掉的account id不再存在，因此 selectedAccount == null
-            if (selectedAccount != null || accountId == -1)
-                sharedViewModel.updateAccountFields(selectedAccount = selectedAccount)
+            sharedViewModel.updateAccountFields(selectedAccount = selectedAccount)
         }
 
         ItemScreen(navigateToHomeScreen = navigateToHomeScreen, selectedAccount = selectedAccount, sharedViewModel = sharedViewModel)

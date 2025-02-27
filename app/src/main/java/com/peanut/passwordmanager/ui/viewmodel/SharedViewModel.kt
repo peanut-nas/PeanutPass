@@ -63,14 +63,13 @@ class SharedViewModel @Inject constructor(
     val accountType: MutableState<AccountType> = mutableStateOf(AccountType.NickName)
 
     fun updateAccountFields(selectedAccount: Account?) {
-        if (selectedAccount != null) {
-            id.value = selectedAccount.id
-            title.value = selectedAccount.title
-            account.value = selectedAccount.account
-            accountType.value = selectedAccount.accountType
-            password.value = selectedAccount.password
-            icon.value = selectedAccount.icon
-        }
+        val sAccount = selectedAccount?:Account()
+        id.value = sAccount.id
+        title.value = sAccount.title
+        account.value = sAccount.account
+        accountType.value = sAccount.accountType
+        password.value = sAccount.password
+        icon.value = sAccount.icon
     }
 
     fun validateFields(): Boolean {
