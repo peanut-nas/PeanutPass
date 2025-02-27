@@ -2,8 +2,9 @@ package com.peanut.passwordmanager.di
 
 import android.content.Context
 import androidx.room.Room
+import com.peanut.passwordmanager.data.AccountDao
 import com.peanut.passwordmanager.data.AccountDatabase
-import com.peanut.passwordmanager.data.BackupDatabase
+import com.peanut.passwordmanager.data.repositories.ReadOnlyAccountRepository
 import com.peanut.passwordmanager.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -27,5 +28,9 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideDao(database: AccountDatabase) = database.accountDao()
+
+    @Singleton
+    @Provides
+    fun provideReadOnlyDatabase(dao: AccountDao) = ReadOnlyAccountRepository(dao)
 
 }
