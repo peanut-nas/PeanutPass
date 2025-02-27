@@ -45,19 +45,15 @@ fun SelectableLogoIcon(accountName: String? = null, icon: String? = null, iconPa
             .clickable { launcher.launch("image/*") },
         shape = MaterialTheme.shapes.medium.copy(CornerSize(28.dp)), color = AccountIconBackground.copy(0.5f)
     ) {
-        if (icon != null && icon.isNotEmpty()) {
+        if (!icon.isNullOrEmpty()) {
             val iconUri = Uri.fromFile(File(iconFolder+icon))
             val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-            if (Build.VERSION.SDK_INT < 28) {
-                bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, iconUri)
-            } else {
-                val source = ImageDecoder.createSource(context.contentResolver, iconUri)
-                bitmap.value = ImageDecoder.decodeBitmap(source)
-            }
+            val source = ImageDecoder.createSource(context.contentResolver, iconUri)
+            bitmap.value = ImageDecoder.decodeBitmap(source)
             bitmap.value?.let {
                 Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = Modifier.padding(iconPaddingValues))
             }
-        }else if (accountName != null && accountName.isNotEmpty()) {
+        }else if (!accountName.isNullOrEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = accountName[0].toString(), fontSize = 60.sp)
             }

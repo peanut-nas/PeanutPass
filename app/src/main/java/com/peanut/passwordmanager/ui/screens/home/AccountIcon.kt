@@ -44,12 +44,8 @@ fun AccountIcon(
         if (icon.isNotEmpty()) {
             val iconUri = Uri.fromFile(File(iconFolder + icon))
             val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-            if (Build.VERSION.SDK_INT < 28) {
-                bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, iconUri)
-            } else {
-                val source = ImageDecoder.createSource(context.contentResolver, iconUri)
-                bitmap.value = ImageDecoder.decodeBitmap(source)
-            }
+            val source = ImageDecoder.createSource(context.contentResolver, iconUri)
+            bitmap.value = ImageDecoder.decodeBitmap(source)
             bitmap.value?.let {
                 Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = modifier.padding(iconPaddingValues))
             }

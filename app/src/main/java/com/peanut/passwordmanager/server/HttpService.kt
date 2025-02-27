@@ -71,7 +71,7 @@ class HttpService : Service() {
                 while (enumIpAddr.hasMoreElements()) {
                     val inetAddress = enumIpAddr.nextElement()
                     if (!inetAddress.isLoopbackAddress && !inetAddress.isLinkLocalAddress) {
-                        list = list.plus(inetAddress.hostAddress.toString())
+                        list = list.plus(inetAddress?.hostAddress.toString())
                     }
                 }
             }
