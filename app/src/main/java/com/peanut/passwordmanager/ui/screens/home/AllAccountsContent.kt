@@ -4,16 +4,29 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.*
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.Surface
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
@@ -42,17 +55,10 @@ fun AllAccountsContent(allAccounts: List<Account>, navigateToItemScreen: (Int) -
                 }
             }
             val degrees by animateFloatAsState(targetValue = if (dismissState.targetValue == DismissValue.Default) 0f else -45f)
-            var itemAppeared by remember { mutableStateOf(false) }
-            LaunchedEffect(key1 = true, block = { itemAppeared = true })
             Surface(shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp))) {
-                AnimatedVisibility(
-                    visible = itemAppeared && !isDismissed, enter = expandVertically(animationSpec = tween(durationMillis = 300)),
-                    exit = shrinkVertically(animationSpec = tween(durationMillis = 300))
-                ) {
-                    SwipeToDismiss(state = dismissState, directions = setOf(DismissDirection.EndToStart), dismissThresholds = { FractionalThreshold(0.2f) },
-                        background = { RedBackground(degrees = degrees) }) {
-                        SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
-                    }
+                SwipeToDismiss(state = dismissState, directions = setOf(DismissDirection.EndToStart), dismissThresholds = { FractionalThreshold(0.2f) },
+                    background = { RedBackground(degrees = degrees) }) {
+                    SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel)
                 }
             }
         }
