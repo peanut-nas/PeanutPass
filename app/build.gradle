@@ -6,12 +6,11 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.peanut.passwordmanager"
         minSdk 31
-        targetSdk 33
         versionCode 50
         versionName "0.5.0-preview"
 
