@@ -6,7 +6,7 @@ object Constants {
     const val DATABASE_NAME = "password_manager"
     const val DATABASE_NAME_BACKUP = "password_manager_backup"
 
-    const val SPLASH_SCREEN = "splash"
+    const val HOME_SCREEN_DEFAULT = "home/none"
     const val HOME_SCREEN = "home/{action}"
     const val ITEM_SCREEN = "item/{itemId}"
 

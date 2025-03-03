@@ -15,11 +15,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.peanut.passwordmanager.R
+import kotlinx.coroutines.delay
 
+@Deprecated("Use System SplashScreen instead")
 @Composable
 fun SplashScreen(navigateToHomeScreen: () -> Unit) {
     LaunchedEffect(key1 = true, block = {
-//        delay(1000)
+        delay(300)
         navigateToHomeScreen()
     })
     Box(
@@ -43,6 +45,6 @@ fun getLogo(): Int {
 
 @Composable
 @Preview
-fun SplashScreenPreview(){
+fun SplashScreenPreview() {
     SplashScreen {}
 }

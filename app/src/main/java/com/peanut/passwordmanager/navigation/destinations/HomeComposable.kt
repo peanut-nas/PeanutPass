@@ -2,12 +2,9 @@ package com.peanut.passwordmanager.navigation.destinations
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.navigation.compose.composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.peanut.passwordmanager.ui.screens.home.HomeScreen
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
