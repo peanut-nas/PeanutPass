@@ -56,7 +56,9 @@ fun PasswordGenerator(
             shape = MaterialTheme.shapes.medium.copy(CornerSize(10.dp)),
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f)
         ) {
-            PasswordText(password)
+            EditablePasswordText(password) {
+                password = it
+            }
         }
         Row(modifier = Modifier.padding(top = 8.dp)) {
             TextCheckbox(

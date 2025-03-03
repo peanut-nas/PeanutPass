@@ -40,7 +40,7 @@ fun BottomSheetPasswordGenerator(sheetState: ModalBottomSheetState, coroutineSco
                     text = "Strong, Secure & Stochastic",
                     modifier = Modifier.padding(0.dp, 20.dp),
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 25.sp,
+                    fontSize = 23.sp,
                     fontFamily = FontFamily.SansSerif
                 )
                 PasswordGenerator(onPasswordChanged = { password ->

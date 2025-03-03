@@ -14,3 +14,10 @@
 
 # 备份
 点击备份按钮后，账号密码都是复制一份以明文放在`Download/Password Manager/`中
+
+# 参考链接
+[1] [构建自动填充服务]( https://developer.android.com/identity/autofill/autofill-services?hl=zh-cn )
+
+[2] [自动填充框架](https://developer.android.com/identity/autofill?hl=zh-cn)
+
+[3] [Google代码参考](https://github.com/android/input-samples/blob/main/AutofillFramework/afservice/src/main/java/com/example/android/autofill/service/data/adapter/DatasetAdapter.java#L77)
