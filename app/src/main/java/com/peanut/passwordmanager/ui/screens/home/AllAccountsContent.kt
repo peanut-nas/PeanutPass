@@ -4,6 +4,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
@@ -39,14 +41,16 @@ fun AllAccountsContent(allAccounts: List<Account>, navigateToItemScreen: (Int) -
                 }
             )
             val degrees by animateFloatAsState(targetValue = if (dismissState.progress != 1f && dismissState.progress > 0.2f ) -45f else 0f)
-            SwipeToDismissBox(
-                state = dismissState,
-                backgroundContent = {
-                    RedBackground(degrees = degrees)
-                },
-                enableDismissFromStartToEnd = false,
-                content = { SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel) }
-            )
+            Surface(shape = MaterialTheme.shapes.medium) {
+                SwipeToDismissBox(
+                    state = dismissState,
+                    backgroundContent = {
+                        RedBackground(degrees = degrees)
+                    },
+                    enableDismissFromStartToEnd = false,
+                    content = { SmallAccountItem(account = account, navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel) }
+                )
+            }
         }
     }
 }
