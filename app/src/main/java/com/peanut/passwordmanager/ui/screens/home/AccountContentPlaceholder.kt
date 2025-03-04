@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,15 +18,15 @@ import androidx.compose.ui.unit.dp
 import com.peanut.passwordmanager.R
 
 @Composable
-fun AccountContentPlaceholder(text: String){
+fun AccountContentPlaceholder(text: String) {
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(modifier = Modifier.size(120.dp), painter = painterResource(id = R.drawable.ic_sad_face), contentDescription = "Sad Face Icon", tint = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.medium))
-        Text(text = text, color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.medium), fontWeight = FontWeight.Bold, fontSize = MaterialTheme.typography.bodyMedium.fontSize)
+        Icon(modifier = Modifier.size(120.dp), painter = painterResource(id = R.drawable.ic_sad_face), contentDescription = "Sad Face Icon", tint = MaterialTheme.colorScheme.surfaceDim)
+        Text(text = text, color = MaterialTheme.colorScheme.surfaceDim, fontWeight = FontWeight.Bold, fontSize = MaterialTheme.typography.bodyMedium.fontSize)
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun EmptyAccountContentPreview(){
+fun EmptyAccountContentPreview() {
     AccountContentPlaceholder(stringResource(id = R.string.empty_content))
 }

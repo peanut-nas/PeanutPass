@@ -3,7 +3,6 @@ package com.peanut.passwordmanager.ui.screens.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -47,7 +46,7 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
             Text(
                 text = actualAccountName,
                 modifier = Modifier.padding(bottom = 12.dp),
-                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface.copy(ContentAlpha.disabled)),
+                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.outline),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

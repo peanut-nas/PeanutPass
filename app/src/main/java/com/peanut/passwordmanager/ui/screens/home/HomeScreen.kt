@@ -68,7 +68,6 @@ fun HomeScreen(action: Action, navigateToItemScreen: (account: Int) -> Unit, sha
                                 topAccounts = (topAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
                             )
                         } else if (topAccounts !is RequestState.Error && mainAccount !is RequestState.Error) {
-                            println(topAccounts.toString() + "" + mainAccount.toString())
                             AccountContentPlaceholder("等待数据中")//todo shining
                         } else {
                             AccountContentPlaceholder("读取账户失败，" + ((topAccounts as RequestState.Error).error.localizedMessage ?: "未知错误"))
