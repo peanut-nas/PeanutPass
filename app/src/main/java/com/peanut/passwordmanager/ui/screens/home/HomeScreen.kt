@@ -24,11 +24,7 @@ import com.peanut.passwordmanager.util.TopAppBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewModel: SharedViewModel) {
-    LaunchedEffect(key1 = true) {
-        sharedViewModel.getAllAccounts()
-        sharedViewModel.readSortState()
-    }
+fun HomeScreen(action: Action, navigateToItemScreen: (account: Int) -> Unit, sharedViewModel: SharedViewModel) {
 
     LaunchedEffect(key1 = action) {
         sharedViewModel.handleDatabaseActions(action = action)
@@ -36,20 +32,18 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topAppBarState by sharedViewModel.topAppBarState
-    val snackbarHostState = remember { SnackbarHostState() }
-    val sortState by sharedViewModel.sortState.collectAsState()
-    val lruAccounts by sharedViewModel.lastRecentUsedAccounts.collectAsState()
-    val lfuAccounts by sharedViewModel.lastFrequentUsedAccounts.collectAsState()
-    val lcAccounts by sharedViewModel.allAccounts.collectAsState()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val topAccounts by sharedViewModel.topAccounts.collectAsState()
+    val mainAccount by sharedViewModel.mainAccounts.collectAsState()
     val searchedAccounts by sharedViewModel.searchedAccounts.collectAsState()
 
-    DisplaySnackBar(snackbarHostState = snackbarHostState, onComplete = { sharedViewModel.action.value = it }, action = action,
+    DisplaySnackBar(snackBarHostState = snackBarHostState, onComplete = { sharedViewModel.action.value = it }, action = action,
         accountTitle = sharedViewModel.title.value) {
         sharedViewModel.action.value = it
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = { HomeTopAppBar(topAppBarState, sharedViewModel, scrollBehavior) },
         content = {
             Column(
@@ -58,43 +52,26 @@ fun HomeScreen(action: Action, navigateToItemScreen: (Int) -> Unit, sharedViewMo
                     .padding(horizontal = 16.dp)
                     .fillMaxSize()
             ) {
-                if (sortState is RequestState.Success){
-                    when{
-                        topAppBarState == TopAppBarState.TRIGGERED -> {
-                            if (searchedAccounts is RequestState.Success)
-                                HomeSearchContent(
-                                    searchedAccounts = (searchedAccounts as RequestState.Success<List<Account>>).data,
-                                    navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel
-                                )
-                        }
-                        (sortState as RequestState.Success<AccountSortStrategy>).data == AccountSortStrategy.LastCreated -> {
-                            if (lcAccounts is RequestState.Success) {
-                                HomeContent(
-                                    allAccounts = (lcAccounts as RequestState.Success<List<Account>>).data,
-                                    allAccountSortStrategy = AccountSortStrategy.LastCreated,
-                                    topAccounts = lruAccounts, sharedViewModel, navigateToItemScreen = navigateToItemScreen
-                                )
-                            } else if (lcAccounts is RequestState.Error) {
-                                AccountContentPlaceholder("读取账户失败，" + ((lcAccounts as RequestState.Error).error.localizedMessage ?: "未知错误"))
-                            }
-                        }
-                        (sortState as RequestState.Success<AccountSortStrategy>).data == AccountSortStrategy.LastRecentUsed -> {
-                            if (lcAccounts is RequestState.Success) {
-                                HomeContent(
-                                    allAccounts = lruAccounts,
-                                    allAccountSortStrategy = AccountSortStrategy.LastRecentUsed,
-                                    topAccounts = lruAccounts, sharedViewModel, navigateToItemScreen = navigateToItemScreen
-                                )
-                            }
-                        }
-                        (sortState as RequestState.Success<AccountSortStrategy>).data == AccountSortStrategy.LastFrequentUsed -> {
-                            if (lcAccounts is RequestState.Success) {
-                                HomeContent(
-                                    allAccounts = lfuAccounts,
-                                    allAccountSortStrategy = AccountSortStrategy.LastFrequentUsed,
-                                    topAccounts = lruAccounts, sharedViewModel, navigateToItemScreen = navigateToItemScreen
-                                )
-                            }
+                when{
+                    topAppBarState == TopAppBarState.TRIGGERED -> {
+                        if (searchedAccounts is RequestState.Success)
+                            HomeSearchContent(
+                                searchedAccounts = (searchedAccounts as RequestState.Success<List<Account>>).data,
+                                navigateToItemScreen = navigateToItemScreen, sharedViewModel = sharedViewModel
+                            )
+                    }
+                    else -> {
+                        if (topAccounts is RequestState.Success && mainAccount is RequestState.Success) {
+                            HomeContent(
+                                allAccounts = (mainAccount as RequestState.Success<List<Account>>).data,
+                                allAccountSortStrategy = AccountSortStrategy.LastCreated,
+                                topAccounts = (topAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
+                            )
+                        } else if (topAccounts !is RequestState.Error && mainAccount !is RequestState.Error) {
+                            println(topAccounts.toString() + "" + mainAccount.toString())
+                            AccountContentPlaceholder("等待数据中")//todo shining
+                        } else {
+                            AccountContentPlaceholder("读取账户失败，" + ((topAccounts as RequestState.Error).error.localizedMessage ?: "未知错误"))
                         }
                     }
                 }

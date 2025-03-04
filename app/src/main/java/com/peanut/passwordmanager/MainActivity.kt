@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         SettingManager.init(this)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        sharedViewModel.feedData()
         setContent {
             PasswordManagerTheme {
                 ProvideWindowInsets {

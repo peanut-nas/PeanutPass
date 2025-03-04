@@ -13,11 +13,23 @@ import com.peanut.passwordmanager.data.repositories.AccountRepository
 import com.peanut.passwordmanager.data.repositories.BackupRepository
 import com.peanut.passwordmanager.data.repositories.DataStoreRepository
 import com.peanut.passwordmanager.data.repositories.PreferenceKeys
-import com.peanut.passwordmanager.util.*
+import com.peanut.passwordmanager.util.AccountSortStrategy
+import com.peanut.passwordmanager.util.AccountType
+import com.peanut.passwordmanager.util.Action
+import com.peanut.passwordmanager.util.Constants
+import com.peanut.passwordmanager.util.RequestState
+import com.peanut.passwordmanager.util.TopAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,34 +38,79 @@ class SharedViewModel @Inject constructor(
     private val repository: AccountRepository,
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
-    private val _allAccounts = MutableStateFlow<RequestState<List<Account>>>(RequestState.Idle)
-    val allAccounts: StateFlow<RequestState<List<Account>>> = _allAccounts
+    // 所有账号，按创建顺序降序，给主页顶部使用
+    private val _topAccounts = MutableStateFlow<RequestState<List<Account>>>(RequestState.Idle)
+    val topAccounts: StateFlow<RequestState<List<Account>>> = _topAccounts
 
-    fun getAllAccounts() {
-        _allAccounts.value = RequestState.Loading
+    // 所有账号，排序不定。
+    private val _mainAccounts = MutableStateFlow<RequestState<List<Account>>>(RequestState.Idle)
+    val mainAccounts: StateFlow<RequestState<List<Account>>> = _mainAccounts
+
+    // 当前选中的账号
+    private val _selectedAccount = MutableStateFlow<Account?>(null)
+    val selectedAccount: StateFlow<Account?> = _selectedAccount
+
+    // 排序规则
+    private val _sortState = MutableStateFlow(AccountSortStrategy.LastCreated)
+    val sortState: StateFlow<AccountSortStrategy> = _sortState
+
+    fun feedData() {
         viewModelScope.launch {
+            collectStateData(_topAccounts) { repository.sortByLastFrequentUsed }
+            collectData(_sortState) {
+                dataStoreRepository.read(PreferenceKeys.HomeSortAllAccount).map {
+                    AccountSortStrategy.valueOf(it ?: AccountSortStrategy.LastCreated.name)
+                }
+            }
+            launch {
+                sortState.collect {
+                    when (it) {
+                        AccountSortStrategy.LastRecentUsed -> collectStateData(_mainAccounts) { repository.sortByLastRecentUsed }
+                        AccountSortStrategy.LastFrequentUsed -> _mainAccounts.value = _topAccounts.value
+                        AccountSortStrategy.LastCreated -> collectStateData(_mainAccounts) { repository.getAllAccounts }
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun notifySelectedAccountChange(selectedAccountID: Int) {
+        innerNotifyDataChange(_selectedAccount) { repository.getSelectedAccount(accountId = selectedAccountID) }
+    }
+
+    private fun <T> CoroutineScope.collectStateData(data: MutableStateFlow<RequestState<T>>, provider: () -> Flow<T>) {
+        data.value = RequestState.Loading
+        launch {
             try {
-                repository.getAllAccounts.collect {
-                    _allAccounts.value = RequestState.Success(it)
+                provider().collect {
+                    data.value = RequestState.Success(it)
                 }
             } catch (e: Exception) {
-                _allAccounts.value = RequestState.Error(e)
+                data.value = RequestState.Error(e)
             }
+        }
+    }
+
+    private fun <T> CoroutineScope.collectData(data: MutableStateFlow<T>, provider: () -> Flow<T>) {
+        launch {
+            try {
+                provider().collect {
+                    data.value = it
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private suspend fun <T> innerNotifyDataChange(data: MutableStateFlow<T>, provider: () -> Flow<T>) {
+        provider().collect {
+            data.value = it
         }
     }
 
     fun getAccountById(id: Int) = repository.getSelectedAccount(accountId = id)
 
-    private val _selectedAccount = MutableStateFlow<Account?>(null)
-    val selectedAccount: StateFlow<Account?> = _selectedAccount
-
-    fun getSelectedAccount(id: Int) {
-        viewModelScope.launch {
-            repository.getSelectedAccount(id).collect { account ->
-                _selectedAccount.value = account
-            }
-        }
-    }
 
     val id: MutableState<Int> = mutableStateOf(0)
     val title: MutableState<String> = mutableStateOf("")
@@ -63,7 +120,7 @@ class SharedViewModel @Inject constructor(
     val accountType: MutableState<AccountType> = mutableStateOf(AccountType.NickName)
 
     fun updateAccountFields(selectedAccount: Account?) {
-        val sAccount = selectedAccount?:Account()
+        val sAccount = selectedAccount ?: Account()
         id.value = sAccount.id
         title.value = sAccount.title
         account.value = sAccount.account
@@ -151,20 +208,18 @@ class SharedViewModel @Inject constructor(
 
     val topAppBarState = mutableStateOf(TopAppBarState.DEFAULT)
 
-    fun persistSortState(accountSortStrategy: AccountSortStrategy){
+    fun persistSortState(accountSortStrategy: AccountSortStrategy) {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.store(key = PreferenceKeys.HomeSortAllAccount, value = accountSortStrategy.name)
         }
     }
 
-    fun persistPasswordSettings(){
+    fun persistPasswordSettings() {
         viewModelScope.launch(Dispatchers.IO) {
             dataStoreRepository.store(key = PreferenceKeys.PasswordGeneratorLength, value = 0)
         }
     }
 
-    private val _sortState = MutableStateFlow<RequestState<AccountSortStrategy>>(RequestState.Idle)
-    val sortState: StateFlow<RequestState<AccountSortStrategy>> = _sortState
 
     val lastRecentUsedAccounts: StateFlow<List<Account>> = repository.sortByLastRecentUsed.stateIn(
         scope = viewModelScope,
@@ -178,22 +233,7 @@ class SharedViewModel @Inject constructor(
         emptyList()
     )
 
-    fun readSortState(){
-        _sortState.value = RequestState.Loading
-        viewModelScope.launch {
-            try {
-                dataStoreRepository.read(PreferenceKeys.HomeSortAllAccount).map {
-                    AccountSortStrategy.valueOf(it?:AccountSortStrategy.LastCreated.name)
-                }.collect{
-                    _sortState.value = RequestState.Success(it)
-                }
-            } catch (e: Exception) {
-                _sortState.value = RequestState.Error(e)
-            }
-        }
-    }
-
-    fun increaseAccountAccessTimes(account: Account, delay: Long){
+    fun increaseAccountAccessTimes(account: Account, delay: Long) {
         viewModelScope.launch {
             delay(delay)
             repository.increaseAccessTimes(account)
@@ -201,26 +241,27 @@ class SharedViewModel @Inject constructor(
     }
 
     suspend fun shouldShow(key: String, consume: () -> Boolean) {
-        val stored = dataStoreRepository.read(booleanPreferencesKey(key)).firstOrNull()?:false
+        val stored = dataStoreRepository.read(booleanPreferencesKey(key)).firstOrNull() ?: false
         if (stored) return
         if (consume()) {
             dataStoreRepository.store(booleanPreferencesKey(key), true)
         }
     }
 
-    suspend fun backup(context: Context){
+    suspend fun backup(context: Context) {
         val backup = Room.databaseBuilder(
             context,
             BackupDatabase::class.java, Constants.DATABASE_NAME_BACKUP
         ).build()
         val r = BackupRepository(backup.backupDao(), backup)
         r.deleteTable()
-        when(val it = allAccounts.value){
+        when (val it = topAccounts.value) {
             is RequestState.Success -> {
                 it.data.forEach {
                     r.addAccount(it, context)
                 }
             }
+
             else -> {}
         }
         backup.close()

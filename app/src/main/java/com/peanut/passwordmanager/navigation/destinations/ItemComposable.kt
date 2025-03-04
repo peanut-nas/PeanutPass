@@ -22,7 +22,7 @@ fun NavGraphBuilder.itemComposable(navigateToHomeScreen: (Action) -> Unit, share
     ){
         val accountId = it.arguments!!.getInt("itemId")
         LaunchedEffect(key1 = accountId) {
-            sharedViewModel.getSelectedAccount(accountId)
+            sharedViewModel.notifySelectedAccountChange(accountId)
         }
         val selectedAccount by sharedViewModel.selectedAccount.collectAsState()
 

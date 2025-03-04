@@ -11,7 +11,7 @@ import com.peanut.passwordmanager.util.Action
 import kotlinx.coroutines.launch
 
 @Composable
-fun DisplaySnackBar(snackbarHostState: SnackbarHostState,
+fun DisplaySnackBar(snackBarHostState: SnackbarHostState,
                     onComplete: (Action) -> Unit,
                     action: Action,
                     accountTitle: String,
@@ -23,7 +23,7 @@ fun DisplaySnackBar(snackbarHostState: SnackbarHostState,
     LaunchedEffect(key1 = action){
         if (action != Action.NO_ACTION){
             scope.launch {
-                val snackBarResult = snackbarHostState.showSnackbar(
+                val snackBarResult = snackBarHostState.showSnackbar(
                     message = "$actionName: $accountTitle",
                     actionLabel = setActionLabel(action, undo, ok)
                 )
