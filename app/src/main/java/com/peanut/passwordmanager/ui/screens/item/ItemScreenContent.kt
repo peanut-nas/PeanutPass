@@ -68,6 +68,6 @@ fun ItemScreenContent(
 
 @Composable
 @Preview(showBackground = true)
-fun a(){
+fun Preview(){
     KeyAndInputValue(key = stringResource(id = R.string.platform_name), value = "", onValueChange = {})
 }

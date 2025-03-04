@@ -28,11 +28,7 @@ fun generatePassword(
 }
 
 fun List<Pair<String, Int>>.clearType(): String{
-    val sb = StringBuilder()
-    for(p in this){
-        sb.append(p.first)
-    }
-    return sb.toString()
+    return this.joinToString("") { it.first }
 }
 
 fun guessTypeFromString(password: String): List<Pair<String, Int>>{

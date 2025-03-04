@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,14 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun KeyAndInputValue(key: String, value: String, onValueChange: (String) -> Unit, readOnly: Boolean = false, trailingIcon: @Composable () -> Unit = {}, customInputValue: @Composable (() -> Unit)? = null){
+fun KeyAndInputValue(key: String, value: String, onValueChange: (String) -> Unit, readOnly: Boolean = false, trailingIcon: @Composable () -> Unit = {}, customInputValue: @Composable (() -> Unit)? = null) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Text(text = "$key:", fontWeight = FontWeight.Bold, fontSize = 20.sp)
         Spacer(modifier = Modifier.width(12.dp))
-        Surface(modifier = Modifier
-            .fillMaxWidth(),
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(),
             shape = MaterialTheme.shapes.medium.copy(CornerSize(10.dp)),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),) {
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
+        ) {
             if (customInputValue != null)
                 customInputValue()
             else

@@ -3,6 +3,7 @@ package com.peanut.passwordmanager.ui.component
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,7 +40,7 @@ fun BackupAction(onBackupClicked: () -> Unit) {
 @Composable
 fun GoBackAction(onBackClicked: (Action) -> Unit){
     IconButton(onClick = { onBackClicked(Action.NO_ACTION) }) {
-        Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.go_back))
+        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.go_back))
     }
 }
 
