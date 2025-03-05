@@ -16,6 +16,7 @@
     <string name="account_type_phone_number">手机号</string>
     <string name="account_type_nickname">昵称</string>
     <string name="account_type_reference">第三方登录</string>
+    <string name="unlock_device">请进行设备验证</string>
     <string name="platform_name">账号平台</string>
     <string name="account_name">账号名</string>
     <string name="account_type">账号类别</string>

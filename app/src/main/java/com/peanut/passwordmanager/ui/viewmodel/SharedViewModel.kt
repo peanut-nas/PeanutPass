@@ -1,9 +1,19 @@
 package com.peanut.passwordmanager.ui.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import android.view.autofill.AutofillManager
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -53,6 +63,10 @@ class SharedViewModel @Inject constructor(
     // 排序规则
     private val _sortState = MutableStateFlow(AccountSortStrategy.LastCreated)
     val sortState: StateFlow<AccountSortStrategy> = _sortState
+
+    // 生物设备验证
+    private val _authorized = MutableStateFlow(false)
+    val authorized: StateFlow<Boolean> = _authorized
 
     fun feedData() {
         viewModelScope.launch {
@@ -240,7 +254,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    suspend fun shouldShow(key: String, consume: () -> Boolean) {
+    private suspend fun shouldShow(key: String, consume: () -> Boolean) {
         val stored = dataStoreRepository.read(booleanPreferencesKey(key)).firstOrNull() ?: false
         if (stored) return
         if (consume()) {
@@ -265,5 +279,37 @@ class SharedViewModel @Inject constructor(
             else -> {}
         }
         backup.close()
+    }
+
+    fun enableAutofill(context: Context) {
+        if (checkAutofillStatus(context)) return
+        viewModelScope.launch {
+            shouldShow(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE) {
+                val intent = Intent(Settings.ACTION_REQUEST_SET_AUTOFILL_SERVICE).apply {
+                    data = Uri.parse("package:${context.packageName}")
+                }
+                context.startActivity(intent)
+                return@shouldShow true
+            }
+        }
+    }
+
+    private fun checkAutofillStatus(context: Context): Boolean {
+        val autofillManager = getSystemService(context, AutofillManager::class.java) ?: return true
+        if (!autofillManager.isAutofillSupported) return true
+        return autofillManager.hasEnabledAutofillServices()
+    }
+
+    fun authorize(biometricPrompt: BiometricPrompt) {
+        biometricPrompt.authenticate(BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Unlock Password Manager")
+            .setSubtitle("Use your fingerprint to unlock")
+            .setConfirmationRequired(false)
+            .setNegativeButtonText("Cancel")
+            .build())
+    }
+
+    fun login() {
+        _authorized.value = true
     }
 }

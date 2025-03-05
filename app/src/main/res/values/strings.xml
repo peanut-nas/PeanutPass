@@ -10,6 +10,7 @@
     <string name="close_search">Close Search</string>
     <string name="close_account">Close Account</string>
     <string name="empty_content">No Accounts Found.</string>
+    <string name="unlock_device">Unlock Device To Continue</string>
     <string name="platform_name">Platform Name</string>
     <string name="account_name">Account Name</string>
     <string name="account_type">Account Type</string>
