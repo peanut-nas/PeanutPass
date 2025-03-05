@@ -33,6 +33,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (account: Int) -> Unit, sha
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val topAppBarState by sharedViewModel.topAppBarState
     val snackBarHostState = remember { SnackbarHostState() }
+    val sortState by sharedViewModel.sortState.collectAsState()
     val topAccounts by sharedViewModel.topAccounts.collectAsState()
     val mainAccount by sharedViewModel.mainAccounts.collectAsState()
     val searchedAccounts by sharedViewModel.searchedAccounts.collectAsState()
@@ -64,7 +65,7 @@ fun HomeScreen(action: Action, navigateToItemScreen: (account: Int) -> Unit, sha
                         if (topAccounts is RequestState.Success && mainAccount is RequestState.Success) {
                             HomeContent(
                                 allAccounts = (mainAccount as RequestState.Success<List<Account>>).data,
-                                allAccountSortStrategy = AccountSortStrategy.LastCreated,
+                                allAccountSortStrategy = sortState,
                                 topAccounts = (topAccounts as RequestState.Success<List<Account>>).data, sharedViewModel, navigateToItemScreen = navigateToItemScreen
                             )
                         } else if (topAccounts !is RequestState.Error && mainAccount !is RequestState.Error) {
