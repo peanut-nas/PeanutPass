@@ -1,19 +1,17 @@
 package com.peanut.passwordmanager.ui.viewmodel
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.view.autofill.AutofillManager
-import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
@@ -41,6 +39,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.crypto.Cipher
 import javax.inject.Inject
 
 @HiltViewModel
@@ -89,7 +88,7 @@ class SharedViewModel @Inject constructor(
     }
 
     suspend fun notifySelectedAccountChange(selectedAccountID: Int) {
-        innerNotifyDataChange(_selectedAccount) { repository.getSelectedAccount(accountId = selectedAccountID) }
+        innerNotifyDataChange(_selectedAccount) { repository.getSelectedAccount(accountId = selectedAccountID).map { it.copy(password = CipherManager.decrypt(it)) } }
     }
 
     private fun <T> CoroutineScope.collectStateData(data: MutableStateFlow<RequestState<T>>, provider: () -> Flow<T>) {
@@ -163,11 +162,13 @@ class SharedViewModel @Inject constructor(
 
     private fun addAccount() {
         viewModelScope.launch(Dispatchers.IO) {
+            val enc = CipherManager.encrypt(password.value)
             val account = Account(
                 title = title.value,
                 icon = icon.value,
                 account = account.value,
-                password = password.value,
+                password = enc.second,
+                iv = enc.first,
                 accountType = accountType.value
             )
             repository.addAccount(account)
@@ -177,12 +178,14 @@ class SharedViewModel @Inject constructor(
 
     private fun updateAccount() {
         viewModelScope.launch(Dispatchers.IO) {
+            val enc = CipherManager.encrypt(password.value)
             val account = Account(
                 id = id.value,
                 title = title.value,
                 icon = icon.value,
                 account = account.value,
-                password = password.value,
+                password = enc.second,
+                iv = enc.first,
                 accountType = accountType.value
             )
             repository.updateAccount(account)
@@ -254,7 +257,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    private suspend fun shouldShow(key: String, consume: () -> Boolean) {
+    private suspend fun shouldShow(key: String, consume: suspend () -> Boolean) {
         val stored = dataStoreRepository.read(booleanPreferencesKey(key)).firstOrNull() ?: false
         if (stored) return
         if (consume()) {
@@ -302,14 +305,30 @@ class SharedViewModel @Inject constructor(
 
     fun authorize(biometricPrompt: BiometricPrompt) {
         biometricPrompt.authenticate(BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Unlock Password Manager")
-            .setSubtitle("Use your fingerprint to unlock")
+            .setTitle("生物识别认证")
+            .setSubtitle("请验证身份以继续")
             .setConfirmationRequired(false)
             .setNegativeButtonText("Cancel")
-            .build())
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+            .build(), BiometricPrompt.CryptoObject(CipherManager.getCipher().apply { init(Cipher.ENCRYPT_MODE, CipherManager.generateKey()) }))
     }
 
     fun login() {
         _authorized.value = true
+    }
+
+    // 将以前的明文数据加密
+    fun encryptData() {
+        viewModelScope.launch {
+            shouldShow(Manifest.permission.USE_BIOMETRIC) {
+                repository.getAllAccounts.firstOrNull()?.filter { it.iv.isEmpty() }?.map {
+                    val enc = CipherManager.encrypt(it.password)
+                    it.copy(password = enc.second, iv = enc.first)
+                }?.forEach {
+                    repository.updateAccount(it)
+                }
+                true
+            }
+        }
     }
 }

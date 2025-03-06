@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -35,11 +34,11 @@ fun AccountIcon(
     fontSize: TextUnit = 24.sp, iconPaddingValues: PaddingValues = PaddingValues(0.dp)
 ) {
     val context = LocalContext.current
-    val iconFolder = context.filesDir.absolutePath + "/"
+    val iconFolder = (context.filesDir?.absolutePath ?: "") + "/"
     Surface(
         modifier = Modifier
             .padding(start = 0.dp, top = 12.dp, bottom = 12.dp, end = 12.dp)
-            .size(width), shape = MaterialTheme.shapes.medium.copy(CornerSize(12.dp)), color = AccountIconBackground.copy(0.5f)
+            .size(width), shape = MaterialTheme.shapes.medium, color = AccountIconBackground.copy(0.5f)
     ) {
         if (icon.isNotEmpty()) {
             val iconUri = Uri.fromFile(File(iconFolder + icon))
@@ -50,7 +49,7 @@ fun AccountIcon(
                 Icon(bitmap = it.asImageBitmap(), contentDescription = "Account Logo Icon", tint = Color.Unspecified, modifier = modifier.padding(iconPaddingValues))
             }
         } else if (accountName.isNotEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = accountName[0].toString(), fontSize = fontSize)
             }
         }

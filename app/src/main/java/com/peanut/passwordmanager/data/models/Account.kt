@@ -13,6 +13,7 @@ data class Account(
     val icon : String = "",
     val account: String = "",
     val password: String = "",
+    val iv: String = "",
     val accountType: AccountType = AccountType.NickName,
     var accessTime: Long = System.currentTimeMillis(),
     val createTime: Long = System.currentTimeMillis(),

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewModelScope
 import com.peanut.passwordmanager.data.models.Account
 import com.peanut.passwordmanager.ui.component.CopyAction
+import com.peanut.passwordmanager.ui.viewmodel.CipherManager
 import com.peanut.passwordmanager.ui.viewmodel.SharedViewModel
 import com.peanut.passwordmanager.util.AccountType
 import kotlinx.coroutines.launch
@@ -69,7 +70,7 @@ fun SmallAccountItem(account: Account, navigateToItemScreen: (accountId: Int) ->
                 .fillMaxSize()
                 .padding(end = 8.dp)
         ) {
-            CopyAction(text = account.password, onCopyTriggered = {
+            CopyAction(text = account.password, transform = { CipherManager.decrypt(account) }, onCopyTriggered = {
                 sharedViewModel.increaseAccountAccessTimes(account, 300)
             })
         }

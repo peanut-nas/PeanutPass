@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.peanut.passwordmanager.navigation.SetupNavigation
@@ -69,9 +68,9 @@ class MainActivity : FragmentActivity() {
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                println(result.cryptoObject)
                 sharedViewModel.login()
                 sharedViewModel.feedData()
+                sharedViewModel.encryptData()
                 sharedViewModel.enableAutofill(context)
             }
         })

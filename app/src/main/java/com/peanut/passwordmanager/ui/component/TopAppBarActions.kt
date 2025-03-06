@@ -8,13 +8,14 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.peanut.passwordmanager.R
 import com.peanut.passwordmanager.util.Action
 import com.peanut.passwordmanager.util.AdditionalFunctions.copy
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchAction(onSearchClicked: () -> Unit) {
@@ -73,13 +74,16 @@ fun UpdateAction(onUpdateClicked: (Action) -> Unit){
 }
 
 @Composable
-fun CopyAction(text: String, onCopyTriggered: () -> Unit){
+fun CopyAction(text: String, transform: suspend (String)->String = {it}, onCopyTriggered: () -> Unit){
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val message = stringResource(id = R.string.account_password_copy)
     IconButton(onClick = {
-        text.copy(context)
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        onCopyTriggered()
+        scope.launch {
+            transform(text).copy(context)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            onCopyTriggered()
+        }
     }) {
         Icon(imageVector = Icons.Rounded.ContentCopy, contentDescription = null)
     }

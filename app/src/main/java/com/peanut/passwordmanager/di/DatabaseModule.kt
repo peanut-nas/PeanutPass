@@ -2,6 +2,8 @@ package com.peanut.passwordmanager.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.peanut.passwordmanager.data.AccountDao
 import com.peanut.passwordmanager.data.AccountDatabase
 import com.peanut.passwordmanager.data.repositories.ReadOnlyAccountRepository
@@ -23,7 +25,7 @@ object DatabaseModule {
         context,
         AccountDatabase::class.java,
         Constants.DATABASE_NAME
-    ).build()
+    ).addMigrations(addEncSupport).build()
 
     @Singleton
     @Provides
@@ -32,5 +34,13 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideReadOnlyDatabase(dao: AccountDao) = ReadOnlyAccountRepository(dao)
+
+}
+
+val addEncSupport = object : Migration(1, 2) {
+
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE ${Constants.DATABASE_TABLE} ADD COLUMN iv TEXT NOT NULL DEFAULT ''")
+    }
 
 }
