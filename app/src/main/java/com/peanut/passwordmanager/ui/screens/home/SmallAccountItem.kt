@@ -110,7 +110,7 @@ suspend fun getDisplayAccount(account: Account, sharedViewModel: SharedViewModel
         AccountType.Reference -> {
             //引用类型代表使用第三方登录(如QQ),这里账户类别会是其余账号的id
             sharedViewModel.getAccountById(account.account.toInt()).collect {
-                getDisplayAccount(it, sharedViewModel, "第三方", onAccountNameFound)
+                getDisplayAccount(it?:Account.unKnown, sharedViewModel, "第三方", onAccountNameFound)
             }
         }
     }

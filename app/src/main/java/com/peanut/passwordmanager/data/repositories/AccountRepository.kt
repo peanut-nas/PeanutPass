@@ -13,7 +13,7 @@ class AccountRepository @Inject constructor(private val accountDao: AccountDao) 
     val sortByLastRecentUsed: Flow<List<Account>> = accountDao.sortByLastRecentUsed()
     val sortByLastFrequentUsed: Flow<List<Account>> = accountDao.sortByLastFrequentUsed()
 
-    fun getSelectedAccount(accountId: Int): Flow<Account> {
+    fun getSelectedAccount(accountId: Int): Flow<Account?> {
         return accountDao.getSelectedAccounts(accountId = accountId)
     }
 

@@ -88,7 +88,10 @@ class SharedViewModel @Inject constructor(
     }
 
     suspend fun notifySelectedAccountChange(selectedAccountID: Int) {
-        innerNotifyDataChange(_selectedAccount) { repository.getSelectedAccount(accountId = selectedAccountID).map { it.copy(password = CipherManager.decrypt(it)) } }
+        innerNotifyDataChange(_selectedAccount) { repository.getSelectedAccount(accountId = selectedAccountID).map {
+            it?:return@map null
+            it.copy(password = CipherManager.decrypt(it))
+        } }
     }
 
     private fun <T> CoroutineScope.collectStateData(data: MutableStateFlow<RequestState<T>>, provider: () -> Flow<T>) {

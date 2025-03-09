@@ -11,7 +11,7 @@ interface AccountDao {
     fun getAllAccounts(): Flow<List<Account>>
 
     @Query("SELECT * FROM accounts WHERE id=:accountId")
-    fun getSelectedAccounts(accountId: Int): Flow<Account>
+    fun getSelectedAccounts(accountId: Int): Flow<Account?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(account: Account)

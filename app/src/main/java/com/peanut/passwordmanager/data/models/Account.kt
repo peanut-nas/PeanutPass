@@ -18,4 +18,8 @@ data class Account(
     var accessTime: Long = System.currentTimeMillis(),
     val createTime: Long = System.currentTimeMillis(),
     var accessTimes: Int = 0,
-)
+) {
+    companion object {
+        val unKnown = Account(id = -1, title = "不存在的账号")
+    }
+}
